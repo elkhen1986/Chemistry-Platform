@@ -1,24 +1,28 @@
 <main>
-        <!-- الرئيسية -->
-        <section id="home-page" class="page-section page-active max-w-6xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onclick="navigateTo('sem-10')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-graduation-cap"></i></div>
-                    <h4>الصف العاشر</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-                <div onclick="navigateTo('sem-11')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-flask"></i></div>
-                    <h4>الصف الحادي عشر</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-                <div onclick="navigateTo('sem-12')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-award"></i></div>
-                    <h4>الصف الثاني عشر</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-            </div>
-        </section>
+<!-- الرئيسية -->
+<section id="home-page" class="page-section page-active max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+<div onclick="navigateTo('sem-10')" class="glass-card grade-card grade-10">
+            <div class="icon-wrap"><i class="fas fa-graduation-cap"></i></div>
+            <h4>الصف العاشر</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+
+<div onclick="navigateTo('sem-11')" class="glass-card grade-card grade-11">
+            <div class="icon-wrap"><i class="fas fa-flask"></i></div>
+            <h4>الصف الحادي عشر</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+
+<div onclick="navigateTo('sem-12')" class="glass-card grade-card grade-12">
+            <div class="icon-wrap"><i class="fas fa-award"></i></div>
+            <h4>الصف الثاني عشر</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+
+    </div>
+</section>
 
         <!-- قيد التجهيز -->
         <section id="soon-page" class="page-section max-w-xl mx-auto px-6 text-center">
@@ -30,37 +34,51 @@
             </div>
         </section>
 
-        <!-- عاشر -->
-        <section id="sem-10" class="page-section max-w-4xl mx-auto px-6">
-            <button onclick="navigateTo('home-page')" class="back-btn"><i class="fas fa-arrow-right"></i>العودة</button>
-            <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">                <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الأول</h4>
-                    <span class="status-badge badge-soon">قريباً</span>
-                </div>
-                <div onclick="navigateTo('term2-10')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الثاني</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-            </div>
-        </section>
+<!-- عاشر -->
+<section id="sem-10" class="page-section max-w-4xl mx-auto px-6 grade-10">
+    <button onclick="navigateTo('home-page')" class="back-btn">
+        <i class="fas fa-arrow-right"></i>العودة
+    </button>
+    
+    <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        
+        <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الأول</h4>
+            <span class="status-badge badge-soon">قريباً</span>
+        </div>
+        
+        <div onclick="navigateTo('term2-10')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الثاني</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+        
+    </div>
+</section>
 
-        <!-- حادي عشر -->
-        <section id="sem-11" class="page-section max-w-4xl mx-auto px-6">
-            <button onclick="navigateTo('home-page')" class="back-btn"><i class="fas fa-arrow-right"></i>العودة</button>
-            <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">                <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الأول</h4>
-                    <span class="status-badge badge-soon">قريباً</span>
-                </div>
-                <div onclick="navigateTo('term2-11')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الثاني</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-            </div>
-        </section>
+    <!-- حادي عشر -->
+<section id="sem-11" class="page-section max-w-4xl mx-auto px-6 grade-11">
+    <button onclick="navigateTo('home-page')" class="back-btn">
+        <i class="fas fa-arrow-right"></i>العودة
+    </button>
+    
+    <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        
+        <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الأول</h4>
+            <span class="status-badge badge-soon">قريباً</span>
+        </div>
+        
+        <div onclick="navigateTo('term2-11')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الثاني</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+        
+    </div>
+</section>
 
         <!-- حادي عشر - فصل ثاني -->
         <section id="term2-11" class="page-section max-w-5xl mx-auto px-6">
@@ -870,25 +888,30 @@
     </div>        
         </section>
 
-        <!-- ثاني عشر -->
-        <section id="sem-12" class="page-section max-w-4xl mx-auto px-6">
-            <button onclick="navigateTo('home-page')" class="back-btn"><i class="fas fa-arrow-right"></i>العودة</button>
-            <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">                <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الأول</h4>
-                    <span class="status-badge badge-soon">قريباً</span>
-                </div>
-                <div onclick="navigateTo('term2-12')" class="glass-card grade-card">
-                    <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
-                    <h4>الفصل الثاني</h4>
-                    <span class="status-badge badge-live">متاح الآن</span>
-                </div>
-            </div>
-        </section>
+    <!-- ثاني عشر -->
+<section id="sem-12" class="page-section max-w-4xl mx-auto px-6 grade-12">
+    <button onclick="navigateTo('home-page')" class="back-btn">
+        <i class="fas fa-arrow-right"></i>العودة
+    </button>
+    
+    <div class="grid gap-6 max-w-4xl mx-auto" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">                
+        <div onclick="navigateTo('soon-page')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الأول</h4>
+            <span class="status-badge badge-soon">قريباً</span>
+        </div>
+        
+        <div onclick="navigateTo('term2-12')" class="glass-card grade-card">
+            <div class="icon-wrap"><i class="fas fa-book-open"></i></div>
+            <h4>الفصل الثاني</h4>
+            <span class="status-badge badge-live">متاح الآن</span>
+        </div>
+    </div>
+</section>
 
         <!-- ثاني عشر - فصل ثاني -->
         <section id="term2-12" class="page-section max-w-5xl mx-auto px-6">
-            <button onclick="navigateTo('sem-11')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للفصول</button>
+            <button onclick="navigateTo('sem-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للفصول</button>
             <div class="section-header">
                 <h2>الصف الثاني عشر - الفصل الثاني</h2>
                 <p>اختر الوحدة المراد دراستها</p>
