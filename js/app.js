@@ -32,16 +32,3 @@ window.onload = () => {
 
 let visitedPages = new Set();
 
-function updateProgress(pageId) {
-    visitedPages.add(pageId);
-
-    const total = document.querySelectorAll(".page-section").length;
-    const progress = (visitedPages.size / total) * 100;
-
-    const bar = document.getElementById("progress-bar");
-    if (bar) {
-        bar.style.width = progress + "%";
-    }
-}
-
-document.getElementById("progress-bar").style.width = "0%"
