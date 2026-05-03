@@ -602,3 +602,8 @@ main {
     padding-top: 0 !important;
   }
 }
+@media (max-width: 768px) {
+  #home-page .grid {
+    transform: translateY(-60px) !important;
+  }
+}
