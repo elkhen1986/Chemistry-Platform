@@ -602,65 +602,8 @@ main {
     padding-top: 0 !important;
   }
 }
-/* === تصليح المسافة لكل الصفحات - موبايل === */
 @media (max-width: 768px) {
-  /* الغي الحسابات القديمة */
-  :root {
-    --header-height: 0px !important;
-    --content-gap: 0px !important;
+  #home-page .grid {
+    transform: translateY(-60px) !important;
   }
-  
-  body { padding-top: 0 !important; }
-  
-  /* الهيدر الجديد صفين = 98px */
-  main {
-    padding-top: 0 !important;
-    padding-bottom: 70px !important;
-    margin-top: 98px !important;
-    min-height: auto !important;
-  }
-  
-  /* كل الصفحات بدون استثناء */
-  .page-section,
-  .page-active,
-  #home-page,
-  #sem-10, #sem-11, #sem-12,
-  #term2-10, #term2-11, #term2-12,
-  #unit1-11, #unit2-11,
-  #soon-page {
-    padding-top: 8px !important;
-    padding-bottom: 16px !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-  
-  /* أول عنصر في أي صفحة يطلع لفوق */
-  .page-active > *:first-child {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
-  
-  /* الجريد والكروت */
-  .page-active .grid {
-    margin-top: 8px !important;
-    gap: 16px !important;
-  }
-  
-  /* زر الرجوع */
-  .back-btn {
-    margin-top: 0 !important;
-    margin-bottom: 12px !important;
-  }
-  
-  /* العناوين */
-  .section-header {
-    margin-top: 4px !important;
-    margin-bottom: 20px !important;
-    padding-top: 0 !important;
-  }
-}
-
-/* موبايلات صغيرة */
-@media (max-width: 480px) {
-  main { margin-top: 92px !important; }
 }
