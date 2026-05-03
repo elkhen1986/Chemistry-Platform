@@ -62,7 +62,7 @@
     pdfBtn = document.createElement('button');
     pdfBtn.id = 'pdfBtn';
     pdfBtn.textContent = '📄 حفظ PDF';
-    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:12px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;';
+    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:9px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;';
     document.body.appendChild(pdfBtn);
   }
 
