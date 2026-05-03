@@ -35,3 +35,56 @@
   });
   document.querySelectorAll(PAGE_SEL).forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
 })();
+
+  // ===== منع الشاشة من النوم =====
+  let wakeLock = null;
+  async function keepAwake() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('[WAKE] الشاشة هتفضل شغالة');
+        wakeLock.addEventListener('release', () => console.log('[WAKE] اتفصل'));
+      }
+    } catch(e) {}
+  }
+  // يشتغل مع أول لمسة (شرط المتصفح)
+  document.addEventListener('click', keepAwake, { once: true });
+  document.addEventListener('touchstart', keepAwake, { once: true });
+  // لو رجع للصفحة بعد ما كان في تطبيق تاني
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !wakeLock) keepAwake();
+  });
+
+  // ===== زرار PDF =====
+function downloadPDF() {
+  const lesson = document.querySelector('.page-section.page-active');
+  if (!lesson) return alert('افتح درس أولاً');
+  
+  const title = lesson.querySelector('h1, h2')?.innerText || lesson.id;
+  
+  // انسخ الدرس عشان نشيل الأزرار منه قبل الطباعة
+  const clone = lesson.cloneNode(true);
+  clone.querySelectorAll('button, .pdf-btn, header, footer').forEach(el => el.remove());
+  
+  const opt = {
+    margin:       0.5,
+    filename:     `${title}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(clone).save();
+  console.log('[PDF] جاري التحميل:', title);
+}
+
+// حط الزرار في كل درس أوتوماتيك
+document.querySelectorAll('.page-section').forEach(sec => {
+  if (sec.id === 'home-page') return; // مش عايزينه في الرئيسية
+  const btn = document.createElement('button');
+  btn.className = 'pdf-btn';
+  btn.innerHTML = '📄 تحميل PDF';
+  btn.onclick = downloadPDF;
+  btn.style.cssText = 'position:fixed;bottom:80px;left:20px;z-index:999;background:#0d6efd;color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;';
+  sec.appendChild(btn);
+});
