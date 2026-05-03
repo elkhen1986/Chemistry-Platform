@@ -68,44 +68,30 @@
 
   pdfBtn.addEventListener('click', () => {
     const lesson = document.querySelector('.page-section.page-active');
-    if(!lesson || lesson.id === 'home-page'){
-      alert('افتح الدرس أولاً');
-      return;
-    }
+    if(!lesson || lesson.id === 'home-page') return alert('افتح الدرس أولاً');
     
     const title = lesson.querySelector('h1,h2')?.innerText?.trim() || 'درس كيمياء';
     
-    // هيدر أول صفحة
     const header = document.createElement('div');
     header.className = 'pdf-header';
-    header.innerHTML = `
-      <div style="text-align:center; padding:25px 0; margin-bottom:30px; border-bottom:3px solid #0d6efd;">
-        <h1 style="margin:0; color:#0d6efd; font-size:24px;">منصة الكيمياء الكويتية</h1>
-        <h2 style="margin:8px 0 0; font-size:18px; color:#333;">${title}</h2>
-        <p style="margin:5px 0 0; font-size:12px; color:#666;">وزارة التربية - المنهج الكويتي 2026</p>
-      </div>
-    `;
+    header.innerHTML = `<div style="text-align:center;padding:20px 0 25px;margin-bottom:25px;border-bottom:2px solid #0d6efd"><h1 style="margin:0;color:#0d6efd;font-size:22px">منصة الكيمياء الكويتية</h1><h2 style="margin:6px 0 0;font-size:16px">${title}</h2></div>`;
     
-    // فوتر آخر صفحة
     const footer = document.createElement('div');
     footer.className = 'pdf-footer';
-    footer.innerHTML = `
-      <div style="text-align:center; padding:20px 0; margin-top:40px; border-top:1px solid #ddd; font-size:11px; color:#888;">
-        تم إنشاؤه بواسطة منصة الكيمياء | chemistry-platform.vercel.app | © 2026
-      </div>
-    `;
+    footer.innerHTML = `<div style="text-align:center;padding:15px 0;margin-top:30px;border-top:1px solid #ccc;font-size:10px;color:#777">chemistry-platform.vercel.app © 2026</div>`;
     
-    lesson.prepend(header);
+    lesson.insertBefore(header, lesson.firstChild);
     lesson.appendChild(footer);
     
     document.body.classList.add('printing');
-    window.print();
+    setTimeout(()=> window.print(), 100);
     
-    setTimeout(()=>{
+    window.onafterprint = () => {
       header.remove();
       footer.remove();
       document.body.classList.remove('printing');
-    }, 1000);
+      window.onafterprint = null;
+    };
   });
 
   function updateBtn(){
