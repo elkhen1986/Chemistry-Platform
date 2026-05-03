@@ -78,13 +78,42 @@ function downloadPDF() {
   console.log('[PDF] جاري التحميل:', title);
 }
 
-// حط الزرار في كل درس أوتوماتيك
-document.querySelectorAll('.page-section').forEach(sec => {
-  if (sec.id === 'home-page') return; // مش عايزينه في الرئيسية
+// ===== زرار PDF عايم =====
+function downloadPDF() {
+  const lesson = document.querySelector('.page-section.page-active');
+  if (!lesson || lesson.id === 'home-page') return alert('افتح درس أولاً');
+  
+  const title = lesson.querySelector('h1, h2')?.innerText?.trim() || lesson.id;
+  console.log('[PDF] بجهز:', title);
+  
+  const clone = lesson.cloneNode(true);
+  clone.querySelectorAll('button, header, footer, nav').forEach(el => el.remove());
+  clone.style.padding = '20px';
+  clone.style.background = 'white';
+  
+  const opt = {
+    margin: 10,
+    filename: title + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(clone).save();
+}
+
+// اعمل الزرار مرة واحدة
+if (!document.getElementById('pdfFloatBtn')) {
   const btn = document.createElement('button');
-  btn.className = 'pdf-btn';
-  btn.innerHTML = '📄 تحميل PDF';
+  btn.id = 'pdfFloatBtn';
+  btn.innerHTML = '📄 PDF';
   btn.onclick = downloadPDF;
-  btn.style.cssText = 'position:fixed;bottom:80px;left:20px;z-index:999;background:#0d6efd;color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;';
-  sec.appendChild(btn);
-});
+  btn.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:9999;background:#0d6efd;color:#fff;border:none;padding:12px 18px;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,0.2);font-size:16px;cursor:pointer;display:none;';
+  document.body.appendChild(btn);
+  
+  // اظهره بس لما تكون جوا درس
+  setInterval(() => {
+    const active = document.querySelector('.page-section.page-active');
+    btn.style.display = (active && active.id !== 'home-page') ? 'block' : 'none';
+  }, 500);
+}
