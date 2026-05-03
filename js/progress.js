@@ -1,91 +1,79 @@
 function initProgress(options = {}) {
     const cfg = {
         defaultPage: options.defaultPage || 'home',
-        storageKey: options.storageKey || 'student_progress',
+        storageKey: options.storageKey || 'chem_progress',
         pageSelector: options.pageSelector || '.page-section',
         activeClass: options.activeClass || 'page-active',
-        triggerAttr: options.triggerAttr || 'data-target',
         contentGap: options.contentGap || 24,
-        headerSelector: options.headerSelector || 'header.fixed-nav',
-        footerSelector: options.footerSelector || 'footer.fixed-footer'
+        headerSelector: 'header.fixed-nav',
+        footerSelector: 'footer.fixed-footer'
     };
 
-    function updateLayoutVars() {
-        const header = document.querySelector(cfg.headerSelector);
-        const footer = document.querySelector(cfg.footerSelector);
-        if (header) {
-            document.documentElement.style.setProperty('--header-height', header.offsetHeight + 'px');
-        }
-        if (footer) {
-            document.documentElement.style.setProperty('--footer-height', footer.offsetHeight + 'px');
-        }
+    function updateLayout() {
+        const h = document.querySelector(cfg.headerSelector);
+        const f = document.querySelector(cfg.footerSelector);
+        if (h) document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
+        if (f) document.documentElement.style.setProperty('--footer-height', f.offsetHeight + 'px');
         document.documentElement.style.setProperty('--content-gap', cfg.contentGap + 'px');
     }
 
-    function save(extra = {}) {
-        const active = document.querySelector(`${cfg.pageSelector}.${cfg.activeClass}`);
-        const data = {
-            pageId: active ? active.id : cfg.defaultPage,
-            scrollY: window.scrollY,
-            ts: Date.now(),
-            ...extra
-        };
+    function getActivePage() {
+        const el = document.querySelector(`${cfg.pageSelector}.${cfg.activeClass}`);
+        return el ? el.id : null;
+    }
+
+    function save() {
+        const pageId = getActivePage() || cfg.defaultPage;
+        const data = { pageId, scrollY: window.scrollY, ts: Date.now() };
         localStorage.setItem(cfg.storageKey, JSON.stringify(data));
     }
 
     function load() {
-        try { return JSON.parse(localStorage.getItem(cfg.storageKey)); }
-        catch (e) { return null; }
+        try { return JSON.parse(localStorage.getItem(cfg.storageKey)); } catch { return null; }
     }
 
-    function showPage(pageId, saveAfter = true) {
-        document.querySelectorAll(cfg.pageSelector).forEach(p => {
-            p.classList.remove(cfg.activeClass);
-        });
-        const target = document.getElementById(pageId);
-        if (target) {
-            target.classList.add(cfg.activeClass);
-            window.scrollTo(0, 0);
-            if (saveAfter) save();
+    function restore() {
+        const data = load();
+        if (data && data.pageId) {
+            if (typeof window.showPage === 'function') {
+                window.showPage(data.pageId);
+            } else {
+                document.querySelectorAll(cfg.pageSelector).forEach(p => p.classList.remove(cfg.activeClass));
+                document.getElementById(data.pageId)?.classList.add(cfg.activeClass);
+            }
+            setTimeout(() => window.scrollTo(0, data.scrollY || 0), 150);
+        }
+    }
+
+    function wrapShowPage() {
+        if (typeof window.showPage === 'function' && !window.showPage.__wrapped) {
+            const orig = window.showPage;
+            window.showPage = function(id) {
+                const r = orig.apply(this, arguments);
+                setTimeout(save, 50);
+                return r;
+            };
+            window.showPage.__wrapped = true;
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        updateLayoutVars();
+        updateLayout();
+        wrapShowPage();
+        restore();
 
-        const last = load();
-        if (last && last.pageId && document.getElementById(last.pageId)) {
-            showPage(last.pageId, false);
-            setTimeout(() => window.scrollTo(0, last.scrollY || 0), 120);
-        } else {
-            showPage(cfg.defaultPage, false);
-        }
-
-        let scrollTimer;
-        window.addEventListener('scroll', () => {
-            clearTimeout(scrollTimer);
-            scrollTimer = setTimeout(save, 250);
-        });
-
+        let t;
+        window.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(save, 300); });
         window.addEventListener('beforeunload', save);
-
+        window.addEventListener('resize', updateLayout);
         if ('ResizeObserver' in window) {
             const hdr = document.querySelector(cfg.headerSelector);
-            if (hdr) new ResizeObserver(updateLayoutVars).observe(hdr);
+            if (hdr) new ResizeObserver(updateLayout).observe(hdr);
         }
-        window.addEventListener('resize', updateLayoutVars);
-    });
 
-    document.addEventListener('click', (e) => {
-        const btn = e.target.closest(`[${cfg.triggerAttr}]`);
-        if (btn) {
-            const targetId = btn.getAttribute(cfg.triggerAttr);
-            if (targetId) {
-                e.preventDefault();
-                showPage(targetId);
-            }
+        if (typeof window.showPage !== 'function') {
+            const obs = new MutationObserver(() => save());
+            document.querySelectorAll(cfg.pageSelector).forEach(p => obs.observe(p, { attributes: true, attributeFilter: ['class'] }));
         }
     });
-
-    return { showPage, save, load };
 }
