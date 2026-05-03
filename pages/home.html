@@ -1,6 +1,3 @@
-<div class="progress-wrapper">
-    <div id="progress-bar"></div>
-</div>
 <main>
         <!-- الرئيسية -->
         <section id="home-page" class="page-section page-active max-w-6xl mx-auto px-6">
@@ -121,13 +118,12 @@
 
         <!-- مصطلحات الكيمياء الكهربائية -->
         <section id="terms-u1-11" class="page-section max-w-6xl mx-auto px-6">
-    <button onclick="navigateTo('unit1-11')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit1-11')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
+
 
     <div class="text-center mb-10">
         <h2 class="text-3xl font-black text-sky-400 mb-2">المصطلحات العلمية</h2>
-        <p class="text-slate-400">الصف الحادي عشر - الكيمياء الكهربائية</p>
+        <p class="text-slate-400">الوحدة الأولى - الكيمياء الكهربائية</p>
         <div class="h-1 w-24 bg-sky-500 mx-auto mt-4 rounded-full"></div>
     </div>
 
@@ -342,9 +338,7 @@
 
         <!-- علل الكيمياء الكهربائية -->
         <section id="questions-u1-11" class="page-section max-w-5xl mx-auto px-6">
-    <button onclick="navigateTo('unit1-11')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+         <button onclick="navigateTo('unit1-11')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
     
     <div class="text-center mb-8">
         <h2 class="text-3xl font-black text-sky-400 mb-2">أسئلة علل</h2>
@@ -585,6 +579,242 @@
     </div>        
         </section>
 
+        <!-- ماذا تتوقع أن يحدث الكيمياء الكهربائية -->
+        <section id="predict-u1-11" class="page-section max-w-5xl mx-auto px-6" dir="rtl">
+        <button onclick="navigateTo('unit1-11')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
+    
+    <div class="text-center mb-10">
+        <h2 class="text-3xl font-black text-amber-400 mb-2">ماذا تتوقع أن يحدث ؟</h2>
+        <p class="text-slate-400">الوحدة الأولى - الكيمياء الكهربائية</p>
+        <div class="flex items-center justify-center gap-2 mt-4 text-amber-400 text-sm">
+            <i class="fas fa-hand-pointer"></i>
+            <span>اضغط على البطاقة لتظهر الإجابة</span>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+
+        <div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">1. للون محلول كبريتات النحاس II الأزرق عند مرور شريحة خارصين فيه لفترة.</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يبهت اللون تدريجيا / يقل / يختفي</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن تركيز كاتيونات النحاس <span class="text-green-400">Cu<sup>2+</sup></span> المسؤولة عن اللون الأزرق في المحلول يتناقص بسبب اختزالها إلى ذرات نحاس Cu كالتالي [ <span class="text-green-400 font-mono" dir="ltr">Cu<sup>2+</sup><sub>(aq)</sub> + 2e<sup>-</sup> → Cu<sub>(s)</sub></span> ] فيبهت اللون</p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">2. لكتلة قطب الخارصين ( الأنود ) <span class="text-green-400">Zn</span> في الخلية الجلفانية ( خارصين – نحاس )</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> تقل كتلته.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن ذرات الخارصين <span class="text-green-400">(Zn)</span> قطب ( الأنود ) تتأكسد وتتحول إلى كاتيونات خارصين <span class="text-green-400">(Zn<sup>2+</sup>)</span> تذوب في المحلول فتقل كتلته بحسب التفاعل التالي : <span class="text-green-400 font-mono" dir="ltr">Zn<sub>(s)</sub> → Zn<sup>2+</sup><sub>(aq)</sub> + 2e<sup>-</sup></span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">3. لكتلة قطب القصدير <span class="text-green-400">Sn</span> في الخلية الجلفانية ذات التفاعل الكلي التالي <span class="text-green-400 font-mono" dir="ltr">Ni + Sn<sup>2+</sup> → Ni<sup>2+</sup> + Sn</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> تزداد كتلته.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن كاتيونات القصدير <span class="text-green-400">Sn<sup>2+</sup></span> تختزل عند الكاثود إلى ذرات قصدير تترسب علي قطب الكاثود فتزيد كتلته حسب تفاعل الاختزال التالي <span class="text-green-400 font-mono" dir="ltr">Sn<sup>2+</sup> + 2e<sup>-</sup> → Sn</span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">4. لكتلة قطب الرصاص <span class="text-green-400">Pb</span> في الخلية الجلفانية ذات الرمز الاصطلاحي <span class="text-green-400 font-mono" dir="ltr">Sn / [Sn<sup>2+</sup>] // [Pb<sup>2+</sup>] / Pb</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> تزداد كتلته.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن كاتيونات الرصاص <span class="text-green-400">Pb<sup>2+</sup></span> تختزل عند الكاثود إلى ذرات رصاص تترسب علي قطب الكاثود فتزيد كتلته <span class="text-green-400 font-mono" dir="ltr">Pb<sup>2+</sup> + 2e<sup>-</sup> → Pb</span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">5. لتركيز أيونات الحديد <span class="text-green-400">Fe<sup>2+</sup></span> أثناء عمل خلية جلفانية لها الرمز الاصطلاحي <span class="text-green-400 font-mono" dir="ltr">Fe / [Fe<sup>2+</sup>] // [Ag<sup>+</sup>] / Ag</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يزداد التركيز.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن الحديد <span class="text-green-400">Fe</span> يتأكسد عند الأنود إلى أيونات الحديد <span class="text-green-400">Fe<sup>2+</sup></span> فيزداد تركيز كاتيونات الحديد في المحلول حسب تفاعل الأكسدة التالي <span class="text-green-400 font-mono" dir="ltr">Fe → Fe<sup>2+</sup> + 2e<sup>-</sup></span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">6. لإناء الحديد عند استخدامه لحفظ محلول حمض الهيدروكلوريك المخفف <span class="text-green-400">( E<sup>0</sup><sub>Fe2+/Fe</sub> = -0.44 V )</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يتآكل الإناء / يتأكسد / تقل كتلته.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن جهد اختزال الحديد أقل من جهد اختزال الهيدروجين فتتأكسد ذرات الحديد إلى كاتيونات الحديد II <span class="text-green-400">Fe<sup>2+</sup></span> وتحل محل كاتيونات الهيدروجين في الحمض <span class="text-green-400 font-mono" dir="ltr">Fe + HCl → FeCl<sub>2</sub> + H<sub>2</sub></span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">7. لإناء النحاس عند استخدامه لحفظ محلول حمض الهيدروكلوريك المخفف <span class="text-green-400">( E<sup>0</sup><sub>Cu2+/Cu</sub> = +0.34 V )</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> لا يحدث له شيء</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن جهد اختزال النحاس أكبر من جهد اختزال الهيدروجين وبالتالي لا يستطيع النحاس أن يختزل كاتيونات الهيدروجين فلا يحدث تفاعل.</p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">8. إضافة البلاتين لمحاليل الأحماض المخففة في الظروف العادية. ( من حيث حدوث التفاعل ) علماً بأن البلاتين يلي الهيدروجين في السلسلة الإلكتروكيميائية</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> لا يحدث تفاعل</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن جهد اختزال البلاتين أكبر من جهد اختزال الهيدروجين وبالتالي لا يستطيع البلاتين أن يختزل كاتيونات هيدروجين الحمض فلا يحدث تفاعل.</p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">9. لسطح المغنسيوم عند وضعه في محلول كبريتات حديد II علما بأن جهود الاختزال القياسية لكل من <span class="text-green-400">( Fe<sup>2+</sup>/Fe = -0.44 V , Mg<sup>2+</sup>/ Mg = -2.37V )</span></h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يتآكل المغنسيوم / يتأكسد / تقل كتلته.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأن جهد اختزال المغنسيوم أقل من جهد اختزال الحديد فتتأكسد ذرات المغنسيوم إلى كاتيوناته التي تذوب في المحلول فتقل كتلته.</p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">10. للحديد عند تركه معرضا للهواء الرطب.</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يتأكل / يتأكسد.</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>لأنه جهد اختزاله منخفض ونشاطه كبير فتتأكسد ذراته بسهولة ويتفاعل مع مكونات الهواء الجوي مكونا مركبات</p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">11. عند كاثود خلية التحليل الكهربي لمصهور كلوريد الصوديوم بالنسبة للمادة المتكونة.</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يتكون فلز الصوديوم</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>اختزال كاتيون الصوديوم ويتكون فلز الصوديوم. <span class="text-green-400 font-mono" dir="ltr">Na<sup>+</sup> + e<sup>-</sup> → Na</span></p>
+    </div>
+</div>
+
+<div class="glass-card p-6 cursor-pointer hover:border-amber-400/50 transition-all" onclick="this.querySelector('.answer').classList.toggle('hidden')">
+    <h4 class="font-bold text-lg text-sky-300">12. عند انود خلية ( دون ) التحليل الكهربي لمصهور كلوريد الصوديوم بالنسبة للمادة المتكونة.</h4>
+    <div class="answer hidden mt-4 pt-4 border-t border-white/10 text-slate-200 space-y-2">
+        <p><strong class="text-amber-300">الحدث:</strong> يتصاعد غاز الكلور</p>
+        <p><strong class="text-amber-300">السبب:</strong></p>
+        <p>تتأكسد أيونات الكلوريد إلى غاز الكلور. <span class="text-green-400 font-mono" dir="ltr">2Cl<sup>-</sup> → Cl<sub>2</sub> + 2e<sup>-</sup></span></p>
+    </div>
+</div>      
+        </section>
+
+        <!-- مصطلحات المركبات الهيدروكربوينة -->
+        <section id="terms-u2-11" class="page-section max-w-6xl mx-auto px-6">
+        <button onclick="navigateTo('unit2-11')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
+
+
+    <div class="text-center mb-10">
+        <h2 class="text-3xl font-black text-sky-400 mb-2">المصطلحات العلمية</h2>
+        <p class="text-slate-400">الوحدة الثانية- المركبات الهيدروكربوينة</p>
+        <div class="h-1 w-24 bg-sky-500 mx-auto mt-4 rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <!-- 1 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">1.</span> المواد العضوية</h3>
+        <p class="text-sm text-slate-300">مادة الحياة على الأرض فهي المكون الأساسي للبروتينات والدهون والفيتامينات والكربوهيدرات والمضادات الحيوية والإنزيمات والنفط ومشتقاته.</p>
+    </div>
+
+    <!-- 2 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">2.</span> الكيمياء العضوية</h3>
+        <p class="text-sm text-slate-300">علم الكيمياء الذي يهتم بدراسة المركبات التي تحتوي على عنصر الكربون.</p>
+    </div>
+
+    <!-- 3 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">3.</span> عنصر الكربون</h3>
+        <p class="text-sm text-slate-300">عنصر يعتبر أساس المركبات العضوية وأهميته في عملية البناء الضوئي سمي "عنصر الحضارة" أو العنصر الأساسي للحياة على الأرض.</p>
+    </div>
+
+    <!-- 4 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">4.</span> المركبات العضوية</h3>
+        <p class="text-sm text-slate-300">المركبات التي تحتوي على عنصر الكربون، باستثناء <span dir="ltr">CO</span> , <span dir="ltr">CO<sub>2</sub></span> اللذان يعتبران مركبين غير عضويين رغم احتوائهما على الكربون.</p>
+    </div>
+
+    <!-- 5 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">5.</span> المركبات الهيدروكربونية</h3>
+        <p class="text-sm text-slate-300">مركبات عضوية تحتوي على الكربون والهيدروجين فقط.</p>
+    </div>
+
+    <!-- 6 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">6.</span> الهيدروكربونات المشبعة</h3>
+        <p class="text-sm text-slate-300">مركبات جميع الروابط بين ذرات الكربون فيها روابط تساهمية أحادية.</p>
+    </div>
+
+    <!-- 7 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">7.</span> الهيدروكربونات غير المشبعة</h3>
+        <p class="text-sm text-slate-300">مركبات تحتوي على الأقل على رابطة تساهمية ثنائية أو ثلاثية واحدة بين ذرتي كربون.</p>
+    </div>
+
+    <!-- 8 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">8.</span> المشتقات الهيدروكربونية</h3>
+        <p class="text-sm text-slate-300">هي مركبات تحتوي على الكربون والهيدروجين وعناصر أخرى مثل الهالوجينات، الأكسجين، النيتروجين، إلخ.</p>
+    </div>
+
+    <!-- 9 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">9.</span> الهيدروكربونات المشبعة (الألكانات)</h3>
+        <p class="text-sm text-slate-300">أبسط أنواع الهيدروكربونات وتحتوي على روابط تساهمية أحادية فقط بين ذرات الكربون.</p>
+    </div>
+
+    <!-- 10 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">10.</span> الألكانات مستقيمة السلسلة</h3>
+        <p class="text-sm text-slate-300">سلاسل من ذرات الكربون متصلة ببعضها البعض بواسطة روابط تساهمية أحادية تشكل جميع ذرات الكربون فيها سلسلة واحدة ممتدة باستثناء الميثان.</p>
+    </div>
+
+    <!-- 11 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">11.</span> الألكانات متفرعة السلسلة</h3>
+        <p class="text-sm text-slate-300">عبارة عن مركبات تتكون من سلاسل كربونية طويلة تتصل بها سلاسل كربونية قصيرة أو فروع.</p>
+    </div>
+
+    <!-- 12 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">12.</span> السلسلة المتجانسة للمركب (التماثلية المتواصلة)</h3>
+        <p class="text-sm text-slate-300">مجموعة متتالية من المركبات يختلف كل مركب فيها عن الذي يسبقه بزيادة مجموعة ميثيلين <span dir="ltr">(-CH<sub>2</sub>-)</span> واحدة.</p>
+    </div>
+
+    <!-- 13 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">13.</span> الذرة البديلة أو المجموعة البديلة</h3>
+        <p class="text-sm text-slate-300">الذرة أو المجموعة التي يمكن أن تحل محل ذرة الهيدروجين في جزيء الهيدروكربون الأساسي.</p>
+    </div>
+
+    <!-- 14 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">14.</span> مجموعة الألكيل</h3>
+        <p class="text-sm text-slate-300">الألكان المقابل بعد نزع ذرة هيدروجين وصيغته العامة <span dir="ltr">(C<sub>n</sub>H<sub>2n+1</sub>)</span>. - أو الجزء المتبقي من الألكان بعد نزع ذرة هيدروجين واحدة منه وصيغته العامة <span dir="ltr">(C<sub>n</sub>H<sub>2n+1</sub>)</span></p>
+    </div>
+
+    <!-- 15 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">15.</span> الألكينات</h3>
+        <p class="text-sm text-slate-300">هيدروكربونات غير مشبعة تحتوي على روابط ( كربون - كربون) تساهمية ثنائية واحدة على الأقل، والصيغة الجزئية العامة لها هي <span dir="ltr">(C<sub>n</sub>H<sub>2n</sub>)</span>.</p>
+    </div>
+
+    <!-- 16 -->
+    <div class="glass-card p-6 relative hover:border-orange-400/50">
+        <h3 class="text-lg font-black text-orange-300 mb-3"><span class="text-orange-500">16.</span> الألكاينات</h3>
+        <p class="text-sm text-slate-300">مركبات هيدروكربونية غير مشبعة تحتوي على رابطة ( كربون - كربون) <span dir="ltr">(-C≡C-)</span> تساهمية ثلاثية واحدة على الأقل، وصيغتها الجزئية العامة هي <span dir="ltr">C<sub>n</sub>H<sub>2n-2</sub></span></p>
+    </div>
+</div>
+        </section>
+
         <!-- ثاني عشر -->
         <section id="sem-12" class="page-section max-w-4xl mx-auto px-6">
             <button onclick="navigateTo('home-page')" class="back-btn"><i class="fas fa-arrow-right"></i>العودة</button>
@@ -626,7 +856,7 @@
 
         <!-- الوحدة الأولى -->
         <section id="unit1-12" class="page-section max-w-6xl mx-auto px-6">
-            <button onclick="navigateTo('term2-12')" class="glass-card px-5 py-2 mb-10 text-xs font-black">رجوع للوحدات</button>
+            <button onclick="navigateTo('term2-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدات</button>
             <h3 class="text-2xl font-black mb-2 text-sky-400 text-center">الأملاح ومعايرة الأحماض والقواعد</h3>
             <p class="text-center text-slate-400 mb-8">الوحدة الأولى</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -638,7 +868,7 @@
 
         <!-- الوحدة الثانية -->
         <section id="unit2-12" class="page-section max-w-6xl mx-auto px-6">
-            <button onclick="navigateTo('term2-12')" class="glass-card px-5 py-2 mb-10 text-xs font-black">رجوع للوحدات</button>
+            <button onclick="navigateTo('term2-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدات</button>
             <h3 class="text-2xl font-black mb-2 text-indigo-400 text-center">المشتقات الهيدروكربونية</h3>
             <p class="text-center text-slate-400 mb-8">الوحدة الثانية</p>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -648,12 +878,10 @@
             </div>
         </section>
 
-
         <!-- مصطلحات الأملاح -->
         <section id="terms-u1-12" class="page-section max-w-6xl mx-auto px-6">
-    <button onclick="navigateTo('unit1-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit1-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
+
 
     <div class="text-center mb-10">
         <h2 class="text-3xl font-black text-sky-400 mb-2">المصطلحات العلمية</h2>
@@ -804,9 +1032,7 @@
 
         <!-- علل الأملاح -->
         <section id="questions-u1-12" class="page-section max-w-5xl mx-auto px-6">
-    <button onclick="navigateTo('unit1-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit1-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
     
     <div class="text-center mb-8">
         <h2 class="text-3xl font-black text-sky-400 mb-2">أسئلة علل</h2>
@@ -978,9 +1204,7 @@
 
         <!-- ماذا تتوقع أن يحدث الأملاح -->
         <section id="predict-u1-12" class="page-section max-w-5xl mx-auto px-6" dir="rtl">
-    <button onclick="navigateTo('unit1-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit1-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
     
     <div class="text-center mb-10">
         <h2 class="text-3xl font-black text-amber-400 mb-2">ماذا تتوقع أن يحدث ؟</h2>
@@ -1158,9 +1382,7 @@
 
         <!-- مصطلحات العضوية -->
         <section id="terms-u2-12" class="page-section max-w-6xl mx-auto px-6">
-    <button onclick="navigateTo('unit2-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit2-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
 
     <div class="text-center mb-10">
         <h2 class="text-3xl font-black text-sky-400 mb-2">المصطلحات العلمية</h2>
@@ -1365,9 +1587,7 @@
 
         <!-- علل العضوية -->
         <section id="questions-u2-12" class="page-section max-w-5xl mx-auto px-6">
-    <button onclick="navigateTo('unit2-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit2-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
     
     <div class="text-center mb-8">
         <h2 class="text-3xl font-black text-sky-400 mb-2">أسئلة علل</h2>
@@ -1656,9 +1876,7 @@
 
         <!-- ماذا تتوقع أن يحدث العضوية -->
         <section id="predict-u2-12" class="page-section max-w-5xl mx-auto px-6" dir="rtl">
-    <button onclick="navigateTo('unit2-12')" class="glass-card px-5 py-2 mb-8 text-xs font-black inline-flex items-center gap-2">
-        <i class="fas fa-arrow-right text-sky-400"></i> رجوع للوحدة
-    </button>
+        <button onclick="navigateTo('unit2-12')" class="back-btn"><i class="fas fa-arrow-right"></i>رجوع للوحدة</button>
     
     <div class="text-center mb-10">
         <h2 class="text-3xl font-black text-amber-400 mb-2">ماذا تتوقع أن يحدث ؟</h2>
