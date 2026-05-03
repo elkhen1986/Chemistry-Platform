@@ -555,37 +555,7 @@ main {
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-secondary)); border-radius: 4px; }
 ::selection { background: rgba(var(--accent-rgb),0.3); color: var(--text-primary); }
 
-/* === تصليح المسافة الكبيرة في الموبايل بعد الهيدر الجديد === */
 @media (max-width: 768px) {
-  :root { 
-    --header-height: 98px !important;  /* الهيدر الجديد صفين */
-    --content-gap: 6px !important;
-  }
-  
-  main {
-    padding-top: calc(var(--header-height) + var(--content-gap)) !important;
-  }
-  
-  /* شيل أي مسافة إضافية من أول سكشن */
-  .page-section,
-  .page-active {
-    padding-top: 8px !important;
-    margin-top: 0 !important;
-  }
-  
-  /* الصفحة الرئيسية تحديداً */
-  #home-page {
-    padding-top: 0 !important;
-  }
-  
-  /* أول كارت يطلع لفوق */
-  #home-page .grid:first-child {
-    margin-top: 0 !important;
-    padding-top: 4px !important;
-  }
-}
-
-/* للموبايلات الصغيرة جداً */
-@media (max-width: 480px) {
-  :root { --header-height: 92px !important; }
+  main { padding-top: 102px !important; }
+  .page-section { padding-top: 0 !important; }
 }
