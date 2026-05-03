@@ -54,30 +54,3 @@
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && !wakeLock) keepAwake();
   });
-
-// ===== زرار PDF - بدون هيدر وفوتر =====
-(function(){
-  let pdfBtn = document.getElementById('pdfBtn');
-  if(!pdfBtn){
-    pdfBtn = document.createElement('button');
-    pdfBtn.id = 'pdfBtn';
-    pdfBtn.textContent = '📄 حفظ PDF';
-    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:9px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;';
-    document.body.appendChild(pdfBtn);
-  }
-
-  pdfBtn.onclick = () => {
-    const lesson = document.querySelector('.page-section.page-active');
-    if(!lesson || lesson.id === 'home-page') return alert('افتح الدرس أولاً');
-    
-    document.body.classList.add('printing');
-    window.print();
-    setTimeout(()=> document.body.classList.remove('printing'), 500);
-  };
-
-  function toggle(){
-    const a = document.querySelector('.page-section.page-active');
-    pdfBtn.style.display = (a && a.id !== 'home-page') ? 'block' : 'none';
-  }
-  setInterval(toggle, 800);
-})();
