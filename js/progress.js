@@ -55,49 +55,29 @@
     if (document.visibilityState === 'visible' && !wakeLock) keepAwake();
   });
 
-// ===== زرار PDF - نسخة نهائية =====
+// ===== زرار PDF - بدون هيدر وفوتر =====
 (function(){
   let pdfBtn = document.getElementById('pdfBtn');
   if(!pdfBtn){
     pdfBtn = document.createElement('button');
     pdfBtn.id = 'pdfBtn';
     pdfBtn.textContent = '📄 حفظ PDF';
-    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:12px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;font-family:inherit;';
+    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:12px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;';
     document.body.appendChild(pdfBtn);
   }
 
-  pdfBtn.addEventListener('click', () => {
+  pdfBtn.onclick = () => {
     const lesson = document.querySelector('.page-section.page-active');
     if(!lesson || lesson.id === 'home-page') return alert('افتح الدرس أولاً');
     
-    const title = lesson.querySelector('h1,h2')?.innerText?.trim() || 'درس كيمياء';
-    
-    const header = document.createElement('div');
-    header.className = 'pdf-header';
-    header.innerHTML = `<div style="text-align:center;padding:20px 0 25px;margin-bottom:25px;border-bottom:2px solid #0d6efd"><h1 style="margin:0;color:#0d6efd;font-size:22px">منصة الكيمياء الكويتية</h1><h2 style="margin:6px 0 0;font-size:16px">${title}</h2></div>`;
-    
-    const footer = document.createElement('div');
-    footer.className = 'pdf-footer';
-    footer.innerHTML = `<div style="text-align:center;padding:15px 0;margin-top:30px;border-top:1px solid #ccc;font-size:10px;color:#777">chemistry-platform.vercel.app © 2026</div>`;
-    
-    lesson.insertBefore(header, lesson.firstChild);
-    lesson.appendChild(footer);
-    
     document.body.classList.add('printing');
-    setTimeout(()=> window.print(), 100);
-    
-    window.onafterprint = () => {
-      header.remove();
-      footer.remove();
-      document.body.classList.remove('printing');
-      window.onafterprint = null;
-    };
-  });
+    window.print();
+    setTimeout(()=> document.body.classList.remove('printing'), 500);
+  };
 
-  function updateBtn(){
-    const active = document.querySelector('.page-section.page-active');
-    pdfBtn.style.display = (active && active.id !== 'home-page') ? 'block' : 'none';
+  function toggle(){
+    const a = document.querySelector('.page-section.page-active');
+    pdfBtn.style.display = (a && a.id !== 'home-page') ? 'block' : 'none';
   }
-  setInterval(updateBtn, 800);
-  window.addEventListener('load', updateBtn);
+  setInterval(toggle, 800);
 })();
