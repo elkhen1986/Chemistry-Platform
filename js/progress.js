@@ -1,71 +1,37 @@
-function initProgress(options = {}) {
-    const cfg = {
-        defaultPage: options.defaultPage || 'home-page',
-        storageKey: options.storageKey || 'chem_platform_v1',
-        pageSelector: options.pageSelector || '.page-section',
-        activeClass: options.activeClass || 'page-active',
-        contentGap: options.contentGap || 24,
-        headerSelector: 'header.fixed-nav',
-        footerSelector: 'footer.fixed-footer'
-    };
 
-    function updateLayout() {
-        const h = document.querySelector(cfg.headerSelector);
-        const f = document.querySelector(cfg.footerSelector);
-        if (h) document.documentElement.style.setProperty('--header-height', h.offsetHeight + 'px');
-        if (f) document.documentElement.style.setProperty('--footer-height', f.offsetHeight + 'px');
-        document.documentElement.style.setProperty('--content-gap', cfg.contentGap + 'px');
+(function(){
+  const KEY = 'chem_platform_v1';
+  const PAGE_SEL = '.page-section';
+  const ACTIVE = 'page-active';
+  const HOME_ID = 'home-page';
+
+  function getActive(){ const el = document.querySelector(PAGE_SEL+'.'+ACTIVE); return el ? el.id : null; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify({id:getActive()||HOME_ID, y:window.scrollY, t:Date.now()})); }catch{} }
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch{ return {}; } }
+
+  function forceShow(id, y){
+    document.querySelectorAll(PAGE_SEL).forEach(p=>p.classList.remove(ACTIVE));
+    const t = document.getElementById(id);
+    if(t){ t.classList.add(ACTIVE); setTimeout(()=>window.scrollTo(0,y||0),50); console.log('[PROGRESS] ÙØªØ­:',id); }
+  }
+
+  function restore(){
+    const d = load();
+    if(d.id && d.id !== HOME_ID && document.getElementById(d.id)){
+      let tries=0; const iv=setInterval(()=>{ forceShow(d.id,d.y); if(++tries>6)clearInterval(iv); },500);
     }
+  }
 
-    function getActivePage() {
-        const el = document.querySelector(`${cfg.pageSelector}.${cfg.activeClass}`);
-        return el ? el.id : null;
-    }
+  window.addEventListener('load', ()=>{ setTimeout(restore, 200); });
 
-    function save() {
-        const pageId = getActivePage() || cfg.defaultPage;
-        try {
-            localStorage.setItem(cfg.storageKey, JSON.stringify({ pageId, scrollY: window.scrollY, ts: Date.now() }));
-            console.log('[progress] saved:', pageId);
-        } catch(e) {}
-    }
+  document.addEventListener('click', ()=>setTimeout(save,100), true);
+  window.addEventListener('scroll', ()=>{ clearTimeout(window._sv); window._sv=setTimeout(save,300); });
+  window.addEventListener('pagehide', save);
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') save(); });
 
-    function load() { try { return JSON.parse(localStorage.getItem(cfg.storageKey)); } catch { return null; } }
-
-function restore() {
-    const data = load();
-    if (data && data.pageId) {
-        setTimeout(() => {
-            document.querySelectorAll(cfg.pageSelector).forEach(p => p.classList.remove(cfg.activeClass));
-            document.getElementById(data.pageId)?.classList.add(cfg.activeClass);
-            window.scrollTo(0, data.scrollY || 0);
-            console.log('[progress] restored:', data.pageId);
-        }, 400); // ← التأخير هو السر
-    }
-}
-
-    function start() {
-        updateLayout();
-        restore();
-
-        document.addEventListener('click', () => setTimeout(save, 150), true);
-        window.addEventListener('scroll', () => { clearTimeout(window._psave); window._psave = setTimeout(save, 400); });
-        window.addEventListener('beforeunload', save);
-        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
-        window.addEventListener('popstate', save);
-        window.addEventListener('hashchange', save);
-        window.addEventListener('resize', updateLayout);
-
-        const obs = new MutationObserver(save);
-        document.querySelectorAll(cfg.pageSelector).forEach(p => obs.observe(p, { attributes: true, attributeFilter: ['class'] }));
-
-        if ('ResizeObserver' in window) {
-            const hdr = document.querySelector(cfg.headerSelector);
-            if (hdr) new ResizeObserver(updateLayout).observe(hdr);
-        }
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', start);
-    } else { start(); }
-}
+  const obs = new MutationObserver(()=>{
+    const d=load(); const cur=getActive();
+    if(d.id && d.id!==HOME_ID && cur===HOME_ID){ forceShow(d.id,d.y); }
+  });
+  document.querySelectorAll(PAGE_SEL).forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
+})();
