@@ -606,23 +606,16 @@ main {
     transition: width 0.3s ease;
 }
 
-/* طباعة PDF بنفس الألوان */
 @media print {
-    * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  body.print-pdf > *:not(.page-section.page-active) {
-    display: none !important;
-  }
-  body.print-pdf .page-section.page-active {
-    display: block !important;
+  html, body { background: white !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body.printing > * { display: none !important; }
+  body.printing .page-section.page-active { 
+    display: block !important; 
     position: static !important;
     width: 100% !important;
-    margin: 0 !important;
-    padding: 20px !important;
-    box-shadow: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
-  /* اخفي زرار PDF نفسه في الطباعة */
-  #pdfFloatBtn { display: none !important; }
+  #pdfBtn { display: none !important; }
 }

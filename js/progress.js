@@ -55,53 +55,34 @@
     if (document.visibilityState === 'visible' && !wakeLock) keepAwake();
   });
 
-// ===== PDF بنفس الألوان - نسخة ثابتة =====
+// ===== زرار PDF - طباعة مباشرة =====
 (function(){
-  // 1. اعمل الزرار مرة واحدة
-  let pdfBtn = document.getElementById('pdfFloatBtn');
+  // اعمل الزرار
+  let pdfBtn = document.getElementById('pdfBtn');
   if(!pdfBtn){
     pdfBtn = document.createElement('button');
-    pdfBtn.id = 'pdfFloatBtn';
-    pdfBtn.innerHTML = '📄 PDF';
-    pdfBtn.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:99999;background:#0d6efd;color:#fff;border:none;padding:12px 18px;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,.3);font-size:16px;cursor:pointer;display:none;';
+    pdfBtn.id = 'pdfBtn';
+    pdfBtn.textContent = '📄 حفظ PDF';
+    pdfBtn.style.cssText = 'position:fixed;bottom:85px;right:18px;z-index:99999;background:#198754;color:white;border:none;padding:12px 20px;border-radius:30px;font-size:15px;box-shadow:0 3px 10px rgba(0,0,0,0.3);cursor:pointer;display:none;';
     document.body.appendChild(pdfBtn);
   }
 
-  // 2. وظيفة التحميل
-  async function downloadPDF(){
+  pdfBtn.addEventListener('click', () => {
     const lesson = document.querySelector('.page-section.page-active');
     if(!lesson || lesson.id === 'home-page'){
-      alert('افتح درس أولاً');
+      alert('افتح الدرس الأول');
       return;
     }
-    const title = lesson.querySelector('h1,h2')?.innerText?.trim() || lesson.id;
-    pdfBtn.style.display = 'none';
-    
-    try {
-      const bg = getComputedStyle(lesson).backgroundColor;
-      await html2pdf().set({
-        margin:0,
-        filename: title + '.pdf',
-        image:{type:'jpeg',quality:0.98},
-        html2canvas:{scale:2.5,useCORS:true,backgroundColor:bg,scrollY:0},
-        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-      }).from(lesson).save();
-    } catch(e){
-      console.error(e);
-      alert('حصل خطأ في إنشاء PDF');
-    }
-    pdfBtn.style.display = 'block';
-  }
-  pdfBtn.onclick = downloadPDF;
+    // خلي الجسم يطبع الدرس بس
+    document.body.classList.add('printing');
+    window.print();
+    setTimeout(()=> document.body.classList.remove('printing'), 1000);
+  });
 
-  // 3. اظهر الزرار بس جوا الدروس
-  function toggleBtn(){
+  // اظهر/اخفي الزرار
+  function updateBtn(){
     const active = document.querySelector('.page-section.page-active');
     pdfBtn.style.display = (active && active.id !== 'home-page') ? 'block' : 'none';
   }
-  // راقب تغيير الصفحة
-  const obs = new MutationObserver(toggleBtn);
-  document.querySelectorAll('.page-section').forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
-  window.addEventListener('load', toggleBtn);
-  setTimeout(toggleBtn, 1000); // تأكيد
+  setInterval(updateBtn, 800);
 })();
