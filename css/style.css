@@ -606,27 +606,34 @@ main {
     transition: width 0.3s ease;
 }
 
-@media print {
-  /* أهم سطر - يحفظ كل الألوان */
-    * {
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
+/* ===== طباعة PDF ===== */
+.pdf-header, .pdf-footer {
+  display: none;
 }
-  /* اخفي كل حاجة إلا الدرس المفتوح */
+
+@media print {
+    * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
   body.printing > *:not(.page-section.page-active) {
     display: none !important;
   }
-
-  /* الدرس ياخد الصفحة كلها بنفس ألوانه */
+  
   body.printing .page-section.page-active {
     display: block !important;
     position: static !important;
     width: 100% !important;
     margin: 0 !important;
     padding: 15mm !important;
-    /* متفرضش أي خلفية هنا - سيبه ياخد خلفيته الأصلية */
   }
-
-  /* اخفي الزرار */
-  #pdfBtn { display: none !important; }
+  
+  .pdf-header, .pdf-footer {
+    display: block !important;
+  }
+  
+  #pdfBtn {
+    display: none !important;
+  }
 }
