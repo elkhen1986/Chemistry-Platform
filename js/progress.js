@@ -32,16 +32,17 @@ function initProgress(options = {}) {
 
     function load() { try { return JSON.parse(localStorage.getItem(cfg.storageKey)); } catch { return null; } }
 
-    function restore() {
-        const data = load();
-        if (data && data.pageId) {
+function restore() {
+    const data = load();
+    if (data && data.pageId) {
+        setTimeout(() => {
             document.querySelectorAll(cfg.pageSelector).forEach(p => p.classList.remove(cfg.activeClass));
-            const target = document.getElementById(data.pageId);
-            if (target) target.classList.add(cfg.activeClass);
-            setTimeout(() => window.scrollTo(0, data.scrollY || 0), 100);
+            document.getElementById(data.pageId)?.classList.add(cfg.activeClass);
+            window.scrollTo(0, data.scrollY || 0);
             console.log('[progress] restored:', data.pageId);
-        }
+        }, 400); // ← التأخير هو السر
     }
+}
 
     function start() {
         updateLayout();
