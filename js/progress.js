@@ -1,7 +1,7 @@
 function initProgress(options = {}) {
     const cfg = {
-        defaultPage: options.defaultPage || 'home',
-        storageKey: options.storageKey || 'chem_progress',
+        defaultPage: options.defaultPage || 'home-page',
+        storageKey: options.storageKey || 'chem_platform_v1',
         pageSelector: options.pageSelector || '.page-section',
         activeClass: options.activeClass || 'page-active',
         contentGap: options.contentGap || 24,
@@ -24,56 +24,47 @@ function initProgress(options = {}) {
 
     function save() {
         const pageId = getActivePage() || cfg.defaultPage;
-        const data = { pageId, scrollY: window.scrollY, ts: Date.now() };
-        localStorage.setItem(cfg.storageKey, JSON.stringify(data));
+        try {
+            localStorage.setItem(cfg.storageKey, JSON.stringify({ pageId, scrollY: window.scrollY, ts: Date.now() }));
+            console.log('[progress] saved:', pageId);
+        } catch(e) {}
     }
 
-    function load() {
-        try { return JSON.parse(localStorage.getItem(cfg.storageKey)); } catch { return null; }
-    }
+    function load() { try { return JSON.parse(localStorage.getItem(cfg.storageKey)); } catch { return null; } }
 
     function restore() {
         const data = load();
         if (data && data.pageId) {
-            if (typeof window.showPage === 'function') {
-                window.showPage(data.pageId);
-            } else {
-                document.querySelectorAll(cfg.pageSelector).forEach(p => p.classList.remove(cfg.activeClass));
-                document.getElementById(data.pageId)?.classList.add(cfg.activeClass);
-            }
-            setTimeout(() => window.scrollTo(0, data.scrollY || 0), 150);
+            document.querySelectorAll(cfg.pageSelector).forEach(p => p.classList.remove(cfg.activeClass));
+            const target = document.getElementById(data.pageId);
+            if (target) target.classList.add(cfg.activeClass);
+            setTimeout(() => window.scrollTo(0, data.scrollY || 0), 100);
+            console.log('[progress] restored:', data.pageId);
         }
     }
 
-    function wrapShowPage() {
-        if (typeof window.showPage === 'function' && !window.showPage.__wrapped) {
-            const orig = window.showPage;
-            window.showPage = function(id) {
-                const r = orig.apply(this, arguments);
-                setTimeout(save, 50);
-                return r;
-            };
-            window.showPage.__wrapped = true;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
+    function start() {
         updateLayout();
-        wrapShowPage();
         restore();
 
-        let t;
-        window.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(save, 300); });
+        document.addEventListener('click', () => setTimeout(save, 150), true);
+        window.addEventListener('scroll', () => { clearTimeout(window._psave); window._psave = setTimeout(save, 400); });
         window.addEventListener('beforeunload', save);
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
+        window.addEventListener('popstate', save);
+        window.addEventListener('hashchange', save);
         window.addEventListener('resize', updateLayout);
+
+        const obs = new MutationObserver(save);
+        document.querySelectorAll(cfg.pageSelector).forEach(p => obs.observe(p, { attributes: true, attributeFilter: ['class'] }));
+
         if ('ResizeObserver' in window) {
             const hdr = document.querySelector(cfg.headerSelector);
             if (hdr) new ResizeObserver(updateLayout).observe(hdr);
         }
+    }
 
-        if (typeof window.showPage !== 'function') {
-            const obs = new MutationObserver(() => save());
-            document.querySelectorAll(cfg.pageSelector).forEach(p => obs.observe(p, { attributes: true, attributeFilter: ['class'] }));
-        }
-    });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else { start(); }
 }
