@@ -78,42 +78,35 @@ function downloadPDF() {
   console.log('[PDF] جاري التحميل:', title);
 }
 
-// ===== زرار PDF عايم =====
 function downloadPDF() {
   const lesson = document.querySelector('.page-section.page-active');
   if (!lesson || lesson.id === 'home-page') return alert('افتح درس أولاً');
   
   const title = lesson.querySelector('h1, h2')?.innerText?.trim() || lesson.id;
-  console.log('[PDF] بجهز:', title);
+  const btn = document.getElementById('pdfFloatBtn');
+  if(btn) btn.style.display = 'none'; // اخفي الزرار قبل التصوير
   
-  const clone = lesson.cloneNode(true);
-  clone.querySelectorAll('button, header, footer, nav').forEach(el => el.remove());
-  clone.style.padding = '20px';
-  clone.style.background = 'white';
+  // خد لون الخلفية الأصلي
+  const bgColor = window.getComputedStyle(lesson).backgroundColor;
   
   const opt = {
-    margin: 10,
-    filename: title + '.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    margin:       0,
+    filename:     `${title}.pdf`,
+    image:        { type: 'jpeg', quality: 1 },
+    html2canvas:  { 
+      scale: 3,                 // جودة عالية
+      useCORS: true,            // للصور الخارجية
+      backgroundColor: bgColor, // نفس لون الدرس بالظبط
+      logging: false,
+      scrollY: 0
+    },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
   };
   
-  html2pdf().set(opt).from(clone).save();
-}
-
-// اعمل الزرار مرة واحدة
-if (!document.getElementById('pdfFloatBtn')) {
-  const btn = document.createElement('button');
-  btn.id = 'pdfFloatBtn';
-  btn.innerHTML = '📄 PDF';
-  btn.onclick = downloadPDF;
-  btn.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:9999;background:#0d6efd;color:#fff;border:none;padding:12px 18px;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,0.2);font-size:16px;cursor:pointer;display:none;';
-  document.body.appendChild(btn);
-  
-  // اظهره بس لما تكون جوا درس
-  setInterval(() => {
-    const active = document.querySelector('.page-section.page-active');
-    btn.style.display = (active && active.id !== 'home-page') ? 'block' : 'none';
-  }, 500);
+  // صور العنصر الأصلي مباشرة (مش نسخة)
+  html2pdf().set(opt).from(lesson).save().then(() => {
+    if(btn) btn.style.display = 'block';
+    console.log('[PDF] تم بنفس الألوان');
+  });
 }

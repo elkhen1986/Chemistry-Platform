@@ -605,3 +605,14 @@ main {
     background: linear-gradient(90deg, #38bdf8, #6366f1);
     transition: width 0.3s ease;
 }
+
+@media print {
+    * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .page-section { 
+    background: inherit !important; 
+    color: inherit !important;
+  }
+}
