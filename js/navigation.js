@@ -54,15 +54,3 @@ function fixLayoutSpacing() {
     }
 }
 
-function navigateTo(page) {
-    document.querySelectorAll(".page-section").forEach(sec => {
-        sec.classList.remove("page-active");
-    });
-
-    const target = document.getElementById(page);
-    if (target) {
-        target.classList.add("page-active");
-    }
-
-    updateProgress(page);
-}
