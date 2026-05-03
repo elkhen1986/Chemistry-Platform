@@ -55,58 +55,53 @@
     if (document.visibilityState === 'visible' && !wakeLock) keepAwake();
   });
 
-  // ===== زرار PDF =====
-function downloadPDF() {
-  const lesson = document.querySelector('.page-section.page-active');
-  if (!lesson) return alert('افتح درس أولاً');
-  
-  const title = lesson.querySelector('h1, h2')?.innerText || lesson.id;
-  
-  // انسخ الدرس عشان نشيل الأزرار منه قبل الطباعة
-  const clone = lesson.cloneNode(true);
-  clone.querySelectorAll('button, .pdf-btn, header, footer').forEach(el => el.remove());
-  
-  const opt = {
-    margin:       0.5,
-    filename:     `${title}.pdf`,
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-  
-  html2pdf().set(opt).from(clone).save();
-  console.log('[PDF] جاري التحميل:', title);
-}
+// ===== PDF بنفس الألوان - نسخة ثابتة =====
+(function(){
+  // 1. اعمل الزرار مرة واحدة
+  let pdfBtn = document.getElementById('pdfFloatBtn');
+  if(!pdfBtn){
+    pdfBtn = document.createElement('button');
+    pdfBtn.id = 'pdfFloatBtn';
+    pdfBtn.innerHTML = '📄 PDF';
+    pdfBtn.style.cssText = 'position:fixed;bottom:90px;right:20px;z-index:99999;background:#0d6efd;color:#fff;border:none;padding:12px 18px;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,.3);font-size:16px;cursor:pointer;display:none;';
+    document.body.appendChild(pdfBtn);
+  }
 
-function downloadPDF() {
-  const lesson = document.querySelector('.page-section.page-active');
-  if (!lesson || lesson.id === 'home-page') return alert('افتح درس أولاً');
-  
-  const title = lesson.querySelector('h1, h2')?.innerText?.trim() || lesson.id;
-  const btn = document.getElementById('pdfFloatBtn');
-  if(btn) btn.style.display = 'none'; // اخفي الزرار قبل التصوير
-  
-  // خد لون الخلفية الأصلي
-  const bgColor = window.getComputedStyle(lesson).backgroundColor;
-  
-  const opt = {
-    margin:       0,
-    filename:     `${title}.pdf`,
-    image:        { type: 'jpeg', quality: 1 },
-    html2canvas:  { 
-      scale: 3,                 // جودة عالية
-      useCORS: true,            // للصور الخارجية
-      backgroundColor: bgColor, // نفس لون الدرس بالظبط
-      logging: false,
-      scrollY: 0
-    },
-    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-  
-  // صور العنصر الأصلي مباشرة (مش نسخة)
-  html2pdf().set(opt).from(lesson).save().then(() => {
-    if(btn) btn.style.display = 'block';
-    console.log('[PDF] تم بنفس الألوان');
-  });
-}
+  // 2. وظيفة التحميل
+  async function downloadPDF(){
+    const lesson = document.querySelector('.page-section.page-active');
+    if(!lesson || lesson.id === 'home-page'){
+      alert('افتح درس أولاً');
+      return;
+    }
+    const title = lesson.querySelector('h1,h2')?.innerText?.trim() || lesson.id;
+    pdfBtn.style.display = 'none';
+    
+    try {
+      const bg = getComputedStyle(lesson).backgroundColor;
+      await html2pdf().set({
+        margin:0,
+        filename: title + '.pdf',
+        image:{type:'jpeg',quality:0.98},
+        html2canvas:{scale:2.5,useCORS:true,backgroundColor:bg,scrollY:0},
+        jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+      }).from(lesson).save();
+    } catch(e){
+      console.error(e);
+      alert('حصل خطأ في إنشاء PDF');
+    }
+    pdfBtn.style.display = 'block';
+  }
+  pdfBtn.onclick = downloadPDF;
+
+  // 3. اظهر الزرار بس جوا الدروس
+  function toggleBtn(){
+    const active = document.querySelector('.page-section.page-active');
+    pdfBtn.style.display = (active && active.id !== 'home-page') ? 'block' : 'none';
+  }
+  // راقب تغيير الصفحة
+  const obs = new MutationObserver(toggleBtn);
+  document.querySelectorAll('.page-section').forEach(p=>obs.observe(p,{attributes:true,attributeFilter:['class']}));
+  window.addEventListener('load', toggleBtn);
+  setTimeout(toggleBtn, 1000); // تأكيد
+})();
