@@ -273,7 +273,7 @@
 
     main {
     flex: 1;
-    padding-top: var(--header-height, 70px);
+    padding-top: 110px; /* كانت 70px */
     padding-bottom: var(--footer-height, 70px);
     position: relative;
     z-index: 1;
