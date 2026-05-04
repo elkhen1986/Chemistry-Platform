@@ -335,6 +335,7 @@ supa.channel('deliver').on('postgres_changes',{event:'INSERT',table:'messages'},
 async function markAllRead(){
   await supa.from('messages').update({status:'read',read_at:new Date()}).eq('channel',channel).neq('from_id',userId)
 }
+const channelName = `chat:${[userId, 'teacher_abdulhamid'].sort().join(':')}`;
 </script>
 </body>
 </html>
