@@ -77,147 +77,132 @@ body{background:#020617;color:#e2e8f0}
   </section>
 </main>
 
+<!-- استبدل كل الـ <script type="module"> في dashboard.html بهذا -->
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const supa = createClient('https://igedjuwdwyoydiyhsfyb.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg');
 const ME = 'teacher_abdulhamid';
 let active = null;
 
-// الساعة
-setInterval(()=> clock.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),1000);
+console.log('🔧 Teacher Dashboard Loading...');
 
-// 1- HEARTBEAT للأونلاين
+// 1- HEARTBEAT
 setInterval(async ()=> {
   await supa.from('user_presence').upsert({user_id:ME, is_online:true, last_seen:new Date().toISOString()});
-}, 4000);
+}, 3000);
 
-// 2- تحميل الطلاب
+// 2- تحميل الطلاب - نسخة مضمونة
 async function loadStudents(){
-  const {data} = await supa.from('messages').select('*').ilike('channel',`%${ME}%`).order('created_at',{ascending:false});
+  console.log('📥 Loading students...');
+  // جيب كل الرسائل بدون فلتر معقد
+  const { data, error } = await supa.from('messages').select('*').order('created_at',{ascending:false}).limit(500);
+  
+  if(error){ console.error('❌ DB Error:', error); return; }
+  console.log('✅ Found', data?.length, 'messages');
+  
   const map = new Map();
   data?.forEach(m=>{
-    if(!map.has(m.channel)){
-      const sid = m.channel.split(':').find(x=>x.startsWith('student_'));
-      if(sid) map.set(sid, {id:sid, name:sid.replace('student_',''), last:m.text});
+    // دور على أي قناة فيها teacher
+    if(m.channel && m.channel.includes('teacher')){
+      const parts = m.channel.split(':');
+      const sid = parts.find(p => p.startsWith('student_'));
+      if(sid && !map.has(sid)){
+        map.set(sid, {
+          id: sid,
+          name: sid.replace('student_',''),
+          last: m.text?.substring(0,30) || '',
+          time: m.created_at,
+          channel: m.channel
+        });
+        console.log('👤 Found student:', sid);
+      }
     }
   });
-  students.innerHTML = '';
+  
+  const studentsDiv = document.getElementById('students');
+  studentsDiv.innerHTML = '';
+  
+  if(map.size === 0){
+    studentsDiv.innerHTML = '<div class="p-4 text-center text-zinc-500 text-sm">لا يوجد طلاب بعد<br><span class="text-xs">اطلب من طالب يبعت رسالة</span></div>';
+    return;
+  }
+  
   [...map.values()].forEach(s=>{
-    const b = document.createElement('button');
-    b.className = 'w-full p-3 rounded-xl hover:bg-white/5 flex items-center gap-3 text-right transition';
-    b.innerHTML = `<div class="w-10 h-10 rounded-lg bg-violet-700 grid place-items-center text-sm font-bold">${s.name[0]}</div><div class="flex-1 min-w-0"><div class="truncate text-sm">${s.name}</div><div class="text-xs text-zinc-500 truncate">${s.last||''}</div></div>`;
-    b.onclick = ()=> openChat(s);
-    students.appendChild(b);
+    const btn = document.createElement('button');
+    btn.className = 'w-full p-3 rounded-xl hover:bg-white/5 flex items-center gap-3 text-right';
+    btn.innerHTML = `<div class="w-10 h-10 rounded-lg bg-violet-700 grid place-items-center">${s.name[0]}</div><div class="flex-1 min-w-0"><div class="text-sm truncate">${s.name}</div><div class="text-xs text-zinc-500 truncate">${s.last}</div></div>`;
+    btn.onclick = ()=> openChat(s);
+    studentsDiv.appendChild(btn);
   });
 }
 
 // 3- فتح محادثة
-async function openChat(s){
-  active = s.id;
-  empty.classList.add('hidden');
-  chatHead.classList.remove('hidden');
-  msgsWrap.classList.remove('hidden');
-  inputWrap.classList.remove('hidden');
-  studentName.textContent = s.name;
-  avatar.textContent = s.name[0];
-
-  const ch = `chat:${[ME,s.id].sort().join(':')}`;
-  const {data} = await supa.from('messages').select('*').eq('channel',ch).order('created_at');
+async function openChat(student){
+  console.log('💬 Opening chat with:', student.id);
+  active = student.id;
+  document.getElementById('empty').classList.add('hidden');
+  document.getElementById('chatHead').classList.remove('hidden');
+  document.getElementById('msgsWrap').classList.remove('hidden');
+  document.getElementById('inputWrap').classList.remove('hidden');
+  document.getElementById('studentName').textContent = student.name;
+  document.getElementById('avatar').textContent = student.name[0];
+  
+  const channel = student.channel || `chat:${[ME, student.id].sort().join(':')}`;
+  console.log('📡 Channel:', channel);
+  
+  const { data, error } = await supa.from('messages').select('*').eq('channel', channel).order('created_at');
+  
+  if(error){ console.error('❌ Load messages error:', error); }
+  console.log('📨 Loaded', data?.length, 'messages');
+  
+  const msgs = document.getElementById('msgs');
   msgs.innerHTML = '';
-  data?.forEach(m=> addMsg(m));
-  msgsWrap.scrollTop = msgsWrap.scrollHeight;
-
-  // علم كمقروء
-  await supa.from('messages').update({status:'read'}).eq('channel',ch).neq('from_id',ME);
+  data?.forEach(m => addMsg(m));
 }
 
-// 4- إضافة رسالة مع hover delete
+// 4- إضافة رسالة
 function addMsg(m){
   const me = m.from_id === ME;
   const div = document.createElement('div');
-  div.className = 'msg-enter flex '+(me?'justify-end':'justify-start')+' group';
+  div.className = 'flex '+(me?'justify-end':'justify-start')+' mb-2 group';
   div.dataset.id = m.id;
-  const time = new Date(m.created_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-  const tick = me? (m.status==='read'?'✓✓':m.status==='delivered'?'✓✓':'✓') : '';
-  div.innerHTML = `<div class="relative max-w-[70%]">
-    <div class="${me?'bg-violet-600':'bg-slate-800'} px-4 py-2 rounded-2xl text-[14px] leading-relaxed">${m.text}</div>
-    <div class="text-[11px] text-zinc-500 mt-1 ${me?'text-left':'text-right'}">${time} ${tick}</div>
-    <button onclick="delMsg('${m.id}')" class="absolute ${me?'-left-8':'-right-8'} top-1 w-6 h-6 grid place-items-center bg-red-900/80 rounded opacity-0 group-hover:opacity-100 transition text-red-300">×</button>
-  </div>`;
-  msgs.appendChild(div);
+  div.innerHTML = `<div class="relative max-w-[75%]"><div class="${me?'bg-violet-600':'bg-slate-800'} px-3 py-2 rounded-xl text-sm">${m.text}</div><div class="text-[10px] text-zinc-500 mt-1">${new Date(m.created_at).toLocaleTimeString('ar-EG')}</div></div>`;
+  document.getElementById('msgs').appendChild(div);
+  document.getElementById('msgsWrap').scrollTop = 999999;
 }
-window.delMsg = async id => { if(confirm('حذف الرسالة؟')) await supa.from('messages').delete().eq('id',id); };
 
-// 5- إرسال فوري (Optimistic UI)
-form.onsubmit = async e => {
+// 5- إرسال
+document.getElementById('form').onsubmit = async e => {
   e.preventDefault();
+  const input = document.getElementById('input');
   const txt = input.value.trim();
-  if(!txt ||!active) return;
-
+  if(!txt || !active) return;
+  
   input.value = '';
-  input.style.height = 'auto';
-  form.querySelector('button').disabled = true;
-
+  const channel = `chat:${[ME, active].sort().join(':')}`;
+  
   // ارسم فوراً
-  const temp = {id:'tmp', from_id:ME, text:txt, created_at:new Date().toISOString(), status:'sent'};
-  addMsg(temp);
-  msgsWrap.scrollTop = msgsWrap.scrollHeight;
-
-  const ch = `chat:${[ME,active].sort().join(':')}`;
-  const {data} = await supa.from('messages').insert({channel:ch, from_id:ME, text:txt, status:'sent'}).select().single();
-
+  addMsg({id:'tmp', from_id:ME, text:txt, created_at:new Date().toISOString()});
+  
+  await supa.from('messages').insert({channel, from_id:ME, text:txt, status:'sent'});
   document.querySelector('[data-id="tmp"]')?.remove();
-  if(data) addMsg(data);
-
-  form.querySelector('button').disabled = false;
-  input.focus();
   loadStudents();
 };
 
-// Enter للإرسال
-input.addEventListener('input', ()=>{
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 128) + 'px';
-  form.querySelector('button').disabled =!input.value.trim();
-});
-input.addEventListener('keydown', e=>{
-  if(e.key==='Enter' &&!e.shiftKey){ e.preventDefault(); form.requestSubmit(); }
-});
-
-// مسح المحادثة
-clearBtn.onclick = async ()=>{
-  if(!active ||!confirm('مسح كل الرسائل؟')) return;
-  const ch = `chat:${[ME,active].sort().join(':')}`;
-  await supa.from('messages').delete().eq('channel',ch);
-  msgs.innerHTML = '';
-  loadStudents();
-};
-
-// Realtime
-supa.channel('teacher')
- .on('postgres_changes',{event:'INSERT',table:'messages'},p=>{
-    const m = p.new;
-    if(!m.channel.includes(ME)) return;
-    const sid = m.channel.split(':').find(x=>x.startsWith('student_'));
-    if(sid===active && m.from_id!==ME){
-      addMsg(m);
-      msgsWrap.scrollTop = msgsWrap.scrollHeight;
-      supa.from('messages').update({status:'delivered'}).eq('id',m.id);
-    }
+// Realtime - مهم جداً
+supa.channel('all-messages')
+  .on('postgres_changes', {event:'*', schema:'public', table:'messages'}, payload => {
+    console.log('🔔 Realtime:', payload.eventType, payload.new?.channel);
     loadStudents();
+    if(active && payload.new?.channel?.includes(active)){
+      if(payload.eventType === 'INSERT') addMsg(payload.new);
+    }
   })
- .on('postgres_changes',{event:'UPDATE',table:'messages'},p=>{
-    const el = document.querySelector(`[data-id="${p.new.id}"]`);
-    if(el){ el.remove(); addMsg(p.new); }
-  })
- .on('postgres_changes',{event:'DELETE',table:'messages'},p=>{
-    document.querySelector(`[data-id="${p.old.id}"]`)?.remove();
-  })
- .subscribe();
+  .subscribe();
 
+console.log('✅ Dashboard ready');
 loadStudents();
-const students=document.getElementById('students'), msgs=document.getElementById('msgs'), msgsWrap=document.getElementById('msgsWrap'), input=document.getElementById('input'), form=document.getElementById('form'), empty=document.getElementById('empty'), chatHead=document.getElementById('chatHead'), inputWrap=document.getElementById('inputWrap'), avatar=document.getElementById('avatar'), studentName=document.getElementById('studentName'), clearBtn=document.getElementById('clearBtn'), clock=document.getElementById('clock'), search=document.getElementById('search');
-search.oninput = ()=> loadStudents();
+setInterval(loadStudents, 5000); // إعادة تحميل كل 5 ثواني كـ backup
 </script>
 </body>
 </html>
