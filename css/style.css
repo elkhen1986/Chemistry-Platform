@@ -25,7 +25,7 @@
     --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f1f5f9;
-    --bg-card: rgba(255,255,255,0.9);
+    --bg-card: rgba(255,255,0.9);
     --bg-card-hover: rgba(255,255,255,1);
     --text-primary: #0f172a;
     --text-secondary: #475569;
@@ -435,9 +435,9 @@ main {
     padding: 10px 20px;
     font-size: 12px;
     font-weight: 700;
-    color: var(--text-secondary);
-    background: var(--bg-card);
-    border: 1px solid var(--border-secondary);
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -446,15 +446,16 @@ main {
 .back-btn:hover {
     color: var(--accent);
     border-color: var(--accent);
-    background: rgba(var(--accent-rgb),0.05);
+    background: rgba(var(--accent-rgb),0.1);
     transform: translateX(-4px);
+    box-shadow: 0 0 20px rgba(var(--accent-rgb),0.2);
 }
 .back-btn i { font-size: 14px; color: var(--accent); }
 
 .section-header { text-align: center; margin-bottom: 40px; }
 .section-header h2 { font-size: 2rem; font-weight: 900; color: var(--accent); margin-bottom: 8px; }
 .section-header p { font-size: 14px; color: var(--text-muted); }
-.section-header .divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-secondary)); margin: 16px auto 0; border-radius: 2px; }
+.section-header .divider { display: none; }
 
 .wa-float { position: fixed; bottom: 70px; left: 24px; z-index: 1001; }
 .wa-icon {
@@ -485,9 +486,6 @@ main {
 .grade-10, .grade-11, .grade-12 {
     background: transparent !important;
 }
-.grade-10 .glass-card,
-.grade-11 .glass-card,
-.grade-12 .glass-card,
 .grade-10 .grade-card,
 .grade-11 .grade-card,
 .grade-12 .grade-card,
@@ -500,11 +498,37 @@ main {
     box-shadow: none !important;
     border: 1px solid rgba(var(--accent-rgb), 0.25) !important;
 }
-.grade-10 .glass-card:hover,
-.grade-11 .glass-card:hover,
-.grade-12 .glass-card:hover {
+.grade-10 .grade-card:hover,
+.grade-11 .grade-card:hover,
+.grade-12 .grade-card:hover,
+.grade-10 .unit-card:hover,
+.grade-11 .unit-card:hover,
+.grade-12 .unit-card:hover {
     background: rgba(var(--accent-rgb), 0.04) !important;
     transform: translateY(-4px);
+}
+
+/* ===== بطاقات الدروس - ستايل 11 ===== */
+.page-active .grid > .glass-card:not(.grade-card):not(.unit-card) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 16px !important;
+    padding: 36px 24px !important;
+    min-height: 160px !important;
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+}
+.page-active .grid > .glass-card:not(.grade-card):not(.unit-card) i {
+    font-size: 38px !important;
+    margin: 0 !important;
+    position: static !important;
+    color: var(--accent) !important;
+}
+.page-active .grid > .glass-card:not(.grade-card):not(.unit-card):first-child i {
+    color: #fbbf24 !important;
 }
 
 /* ===== Badges ثابتة ===== */
@@ -524,13 +548,15 @@ main {
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     :root { --header-height: 64px; --content-gap: 8px; }
-    header.fixed-nav { grid-template-columns: 1fr auto; row-gap: 10px; padding: 10px 16px; min-height: 60px; }
-    header.fixed-nav > div:nth-child(2) { grid-column: 1 / -1; order: 3; justify-self: center; }
+    header.fixed-nav { grid-template-columns: 1fr auto; grid-template-rows: auto auto; row-gap: 8px; padding: 10px 16px; min-height: 60px; }
+    header.fixed-nav > div:nth-child(2) { grid-column: 1 / -1; grid-row: 2; justify-self: center; display: flex; }
+    .logo-group { grid-column: 1; grid-row: 1; }
+    .header-actions { grid-column: 2; grid-row: 1; justify-self: end; }
     .logo-icon { width: 38px; height: 38px; }
     .logo-icon i { font-size: 18px; }
     .logo-text { font-size: 1.3rem; }
-    .teacher-name { display: none; }
-    main { padding-top: calc(var(--header-height) + var(--content-gap)) !important; }
+    .teacher-name { display: block !important; font-size: 10px; padding: 5px 9px; }
+    main { padding-top: 104px !important; }
     .page-section { padding: 12px 16px !important; }
     .section-header { margin-top: 0 !important; margin-bottom: 20px !important; }
     .section-header h2 { font-size: 1.5rem; }
@@ -548,62 +574,12 @@ main {
     .wa-float { bottom: 90px; left: 16px; }
     .wa-icon { width: 48px; height: 48px; }
     .wa-icon i { font-size: 24px; }
+    main { padding-top: 98px !important; }
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-secondary); }
 ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--accent), var(--accent-secondary)); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 ::selection { background: rgba(var(--accent-rgb),0.3); color: var(--text-primary); }
-
-@media (max-width: 768px) {
-  main { padding-top: 102px !important; }
-  .page-section { padding-top: 0 !important; }
-}
-
-/* === FIX نهائي للمسافة - موبايل === */
-@media (max-width: 768px) {
-  /* 1- الغي كل الحسابات القديمة */
-  :root {
-    --header-height: 0px !important;
-    --content-gap: 0px !important;
-  }
-  
-  body {
-    padding-top: 0 !important;
-  }
-  
-  main {
-    padding-top: 0 !important;
-    padding-bottom: 70px !important;
-    margin-top: 98px !important; /* ده ارتفاع الهيدر الجديد بالظبط */
-  }
-  
-  /* 2- شيل أي مسافة من الصفحات */
-  .page-section,
-  .page-active,
-  #home-page,
-  #sem-10, #sem-11, #sem-12 {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-  
-  /* 3- أول جريد يطلع لفوق */
-  .page-active > .grid:first-child,
-  .page-active > div:first-child {
-    margin-top: 12px !important;
-    padding-top: 0 !important;
-  }
-  
-  /* 4- شيل المسافة من الـ section-header لو موجود */
-  .section-header {
-    margin-top: 8px !important;
-    margin-bottom: 20px !important;
-    padding-top: 0 !important;
-  }
-}
-@media (max-width: 768px) {
-  #home-page .grid {
-    transform: translateY(-60px) !important;
-  }
-}
+button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
