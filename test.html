@@ -1,0 +1,21 @@
+<!DOCTYPE html><html><body style="font-family:sans-serif;padding:20px">
+<h2>اختبار Supabase</h2>
+<div id="out">جاري...</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const url='https://igedjuwdwyoydiyhsfyb.supabase.co';
+const key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg';
+const s=supabase.createClient(url,key);
+(async()=>{
+  const out=document.getElementById('out');
+  try{
+    const {data,error}=await s.from('messages').select('id').limit(1);
+    if(error) out.innerHTML='❌ خطأ: '+error.message+'<br>الكود: '+error.code;
+    else {
+      out.innerHTML='✅ اتصال ناجح! جاري الإرسال...';
+      const ins=await s.from('messages').insert({channel:'test',from_id:'test',text:'hello'});
+      out.innerHTML+= ins.error ? '<br>❌ فشل الإرسال: '+ins.error.message : '<br>✅ تم الإرسال بنجاح';
+    }
+  }catch(e){out.textContent='❌ '+e}
+})();
+</script></body></html>
