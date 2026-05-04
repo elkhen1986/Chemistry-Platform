@@ -318,6 +318,23 @@ if(!localStorage.getItem(storageKey)){
   setTimeout(()=> addMessage(`أهلاً ${studentName} 👋 أنا أ. عبدالحميد. اسألني أي شيء عن الكيمياء وأنا معك خطوة بخطوة.`, teacherId, new Date().toISOString(), {save:false}), 600);
 }
 })();
+
+// حضور أونلاين
+setInterval(async ()=>{
+  await supa.from('user_presence').upsert({user_id:userId, last_seen:new Date(), is_online:true})
+},4000);
+
+// لما توصلك رسالة من المعلم → علّمها delivered
+supa.channel('deliver').on('postgres_changes',{event:'INSERT',table:'messages'},async p=>{
+  if(p.new.channel.includes(userId) && p.new.from_id!==userId){
+    await supa.from('messages').update({status:'delivered',delivered_at:new Date()}).eq('id',p.new.id)
+  }
+}).subscribe()
+
+// لما تفتح الشات → علّم الكل مقروء
+async function markAllRead(){
+  await supa.from('messages').update({status:'read',read_at:new Date()}).eq('channel',channel).neq('from_id',userId)
+}
 </script>
 </body>
 </html>
