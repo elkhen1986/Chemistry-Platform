@@ -1,520 +1,154 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم الأستاذ عبدالحميد</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
-  <style>
-    * { font-family: 'Cairo', sans-serif; }
-    ::-webkit-scrollbar { width: 6px; height: 6px }
-    ::-webkit-scrollbar-track { background: transparent }
-    ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 3px }
-    ::-webkit-scrollbar-thumb:hover { background: #a78bfa }
-    .message-enter { animation: slideIn 0.3s ease-out }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px) }
-      to { opacity: 1; transform: translateY(0) }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة المعلم - Dark Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<style>
+  *{font-family:'Cairo',sans-serif}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#4c1d95;border-radius:3px}
+  body{background:#050816;color:#e5e7eb}
+ .glass{background:rgba(17,24,39,.7);backdrop-filter:blur(12px);border:1px solid rgba(139,92,246,.15)}
+</style>
 </head>
-<body class="bg-[#f8f9fc] h-screen overflow-hidden">
-  <!-- Header -->
-  <header class="h-[68px] bg-white border-b border-gray-100 fixed top-0 right-0 left-0 z-40">
-    <div class="h-full px-4 lg:px-6 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-violet-500/20">
-          ع
-        </div>
-        <div>
-          <h1 class="font-bold text-[17px] text-gray-900 leading-tight">لوحة تحكم الأستاذ عبدالحميد</h1>
-          <div class="flex items-center gap-1.5 mt-0.5">
-            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-            <span class="text-xs text-emerald-600 font-medium">متصل الآن</span>
-          </div>
-        </div>
+<body class="h-screen overflow-hidden flex flex-col">
+<!-- Header -->
+<header class="h-[70px] glass sticky top-0 z-40 px-5 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 grid place-items-center font-extrabold text-white shadow-lg shadow-violet-900/40">ع</div>
+    <div>
+      <h1 class="font-extrabold text-[18px] leading-tight">لوحة تحكم الأستاذ عبدالحميد</h1>
+      <div class="flex items-center gap-2 text-xs text-emerald-400"><span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>نظام مباشر</div>
+    </div>
+  </div>
+  <div class="flex items-center gap-4">
+    <div id="liveClock" class="bg-[#0f172a] border border-violet-900/30 px-4 py-2 rounded-xl font-mono text-violet-300 text-sm tracking-wider shadow-inner">--:--:--</div>
+    <div class="w-8 h-8 rounded-full bg-[#1e293b] grid place-items-center text-violet-400">🔔</div>
+  </div>
+</header>
+
+<div class="flex-1 flex overflow-hidden">
+  <!-- Sidebar -->
+  <aside class="w-[360px] glass m-3 ml-0 rounded-2xl flex flex-col overflow-hidden">
+    <div class="p-4 border-b border-white/5">
+      <div class="relative">
+        <input id="search" placeholder="بحث عن طالب..." class="w-full h-11 bg-[#0b1220] border border-white/10 rounded-xl pr-10 pl-3 text-sm outline-none focus:border-violet-500/50 text-gray-200">
+        <svg class="w-4 h-4 absolute right-3 top-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
-      
-      <div class="flex items-center gap-3">
-        <div id="current-time" class="hidden sm:flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-xl font-medium">
-        </div>
-        <button class="relative p-2.5 hover:bg-gray-50 rounded-xl transition group">
-          <svg class="w-5 h-5 text-gray-600 group-hover:text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-          </svg>
-          <span id="notif-count" class="absolute -top-1 -left-1 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-lg hidden">0</span>
-        </button>
+    <div class="px-4 py-2 text-[11px] text-gray-500 uppercase tracking-wider">المحادثات النشطة</div>
+    <div id="students" class="flex-1 overflow-y-auto px-2 pb-3 space-y-1"></div>
+  </aside>
+
+  <!-- Chat -->
+  <main class="flex-1 flex flex-col m-3 mr-0">
+    <div id="empty" class="flex-1 glass rounded-2xl grid place-items-center">
+      <div class="text-center">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-violet-900/40 to-indigo-900/40 grid place-items-center border border-violet-800/30"><svg class="w-12 h-12 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></div>
+        <h3 class="text-xl font-bold mb-1">مرحباً أستاذ عبدالحميد</h3>
+        <p class="text-gray-500 text-sm">اختر طالب من القائمة لبدء المحادثة</p>
       </div>
     </div>
-  </header>
 
-  <!-- Main -->
-  <main class="pt-[68px] h-screen flex">
-    <!-- Sidebar -->
-    <aside id="sidebar" class="w-full lg:w-[360px] xl:w-[380px] shrink-0 bg-white lg:border-l border-gray-100 flex flex-col h-[calc(100vh-68px)]">
-      <!-- Search -->
-      <div class="p-4 border-b border-gray-50">
-        <div class="relative">
-          <input id="search" type="text" placeholder="ابحث عن طالب..." class="w-full h-11 bg-[#f8f9fc] border-0 rounded-2xl pr-11 pl-4 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:bg-white transition">
-          <svg class="w-5 h-5 text-gray-400 absolute right-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Students -->
-      <div class="flex-1 overflow-y-auto">
-        <div class="px-3 py-2">
-          <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 mb-2">المحادثات النشطة</h2>
-        </div>
-        <div id="students-list" class="px-2 pb-4 space-y-0.5">
-          <div class="flex justify-center py-12">
-            <div class="animate-spin w-6 h-6 border-2 border-violet-600 border-t-transparent rounded-full"></div>
+    <div id="chatBox" class="hidden flex-1 flex flex-col glass rounded-2xl overflow-hidden">
+      <!-- Chat Head -->
+      <div class="h-[64px] border-b border-white/5 px-4 flex items-center justify-between bg-[#0b1220]/80">
+        <div class="flex items-center gap-3">
+          <div id="avatar" class="w-10 h-10 rounded-xl bg-violet-900/50 grid place-items-center font-bold text-violet-300 border border-violet-800/40"></div>
+          <div>
+            <div id="sName" class="font-bold"></div>
+            <div id="sStatus" class="text-xs text-gray-400 flex items-center gap-1.5"></div>
           </div>
         </div>
+        <button id="clearChat" class="text-xs text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg hover:bg-red-950/40 border border-red-900/30">مسح المحادثة</button>
       </div>
-    </aside>
-
-    <!-- Chat Area -->
-    <section id="chat-area" class="flex-1 flex-col bg-[#f8f9fc] h-[calc(100vh-68px)] relative hidden lg:flex">
-      <!-- Empty State -->
-      <div id="empty-state" class="flex-1 flex items-center justify-center p-8">
-        <div class="text-center max-w-sm">
-          <div class="w-28 h-28 mx-auto mb-6 rounded-[2rem] bg-gradient-to-br from-violet-100 to-purple-100 flex items-center justify-center shadow-inner">
-            <svg class="w-14 h-14 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-          </div>
-          <h3 class="text-[22px] font-bold text-gray-900 mb-2">مرحباً أستاذ عبدالحميد</h3>
-          <p class="text-gray-500 leading-relaxed">اختر محادثة من القائمة لبدء التواصل مع طلابك ومتابعة تقدمهم التعليمي</p>
-        </div>
-      </div>
-
-      <!-- Chat Header -->
-      <div id="chat-header" class="bg-white border-b border-gray-100 px-4 py-3 hidden">
-        <div class="flex items-center justify-between gap-3 max-w-5xl mx-auto w-full">
-          <div class="flex items-center gap-3 min-w-0">
-            <button id="back-btn" class="lg:hidden p-2 -mr-2 hover:bg-gray-50 rounded-xl">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-            <div class="relative shrink-0">
-              <div id="chat-avatar" class="w-11 h-11 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-md">س</div>
-              <span class="absolute bottom-0 left-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
-            </div>
-            <div class="min-w-0">
-              <h2 id="chat-student-name" class="font-bold text-gray-900 truncate">سارة</h2>
-              <p id="chat-student-id" class="text-xs text-gray-500 truncate">student_سارة • طالب نشط</p>
-            </div>
-          <div class="flex items-center gap-1">
-            <button class="p-2.5 hover:bg-gray-50 rounded-xl transition">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-              </svg>
-            </button>
-            <button class="p-2.5 hover:bg-gray-50 rounded-xl transition">
-              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
       <!-- Messages -->
-      <div id="messages-container" class="flex-1 overflow-y-auto px-4 py-6 hidden">
-        <div id="messages-list" class="space-y-4 max-w-4xl mx-auto">
-        </div>
-      </div>
-
+      <div id="msgs" class="flex-1 overflow-y-auto p-5 space-y-3 bg-[radial-gradient(ellipse_at_top,_rgba(139,92,246,0.08),transparent_60%)]"></div>
       <!-- Input -->
-      <div id="input-wrap" class="bg-white border-t border-gray-100 p-4 hidden">
-        <form id="message-form" class="max-w-4xl mx-auto flex items-end gap-2.5">
-          <button type="button" class="p-3 text-gray-400 hover:text-violet-600 hover:bg-violet-50 rounded-2xl transition shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-            </svg>
-          </button>
-          <div class="flex-1 relative">
-            <textarea id="message-input" placeholder="اكتب رسالتك هنا..." rows="1" class="w-full resize-none bg-[#f8f9fc] border-0 rounded-2xl pl-4 pr-4 py-3.5 text-[15px] leading-relaxed focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:bg-white transition max-h-32 placeholder-gray-400"></textarea>
-          </div>
-          <button type="submit" id="send-btn" disabled class="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-300 text-white rounded-2xl p-3.5 shadow-lg shadow-violet-500/20 hover:shadow-xl hover:shadow-violet-500/30 transition-all disabled:shadow-none disabled:cursor-not-allowed shrink-0">
-            <svg class="w-5 h-5 -scale-x-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-            </svg>
-          </button>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const SUPABASE_URL = 'https://igedjuwdwyoydiyhsfyb.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg';
-    const TEACHER_ID = 'teacher_abdulhamid';
-    
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    
-    let students = {};
-    let activeStudentId = null;
-    let isSending = false;
-
-    const studentsList = document.getElementById('students-list');
-    const messagesList = document.getElementById('messages-list');
-    const messageInput = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-btn');
-    const searchInput = document.getElementById('search');
-
-    // Time
-    function updateTime() {
-      const now = new Date();
-      const timeEl = document.getElementById('current-time');
-      timeEl.textContent = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-    }
-    updateTime();
-    setInterval(updateTime, 30000);
-
-    function getChannel(studentId) {
-      return `chat:${[TEACHER_ID, studentId].sort().join(':')}`;
-    }
-    
-    function escapeHTML(str) {
-      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    function formatTime(ts) {
-      return new Date(ts).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function formatDateSep(date) {
-      const d = new Date(date);
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      
-      if (d.toDateString() === today.toDateString()) return 'اليوم';
-      if (d.toDateString() === yesterday.toDateString()) return 'أمس';
-      return d.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
-    }
-
-    async function loadStudents() {
-      try {
-        const { data, error } = await supabase
-          .from('messages')
-          .select('*')
-          .ilike('channel', `%${TEACHER_ID}%`)
-          .order('created_at', { ascending: false })
-          .limit(1000);
-
-        if (error) throw error;
-
-        const map = {};
-        (data || []).forEach(msg => {
-          if (!map[msg.channel]) {
-            const parts = msg.channel.replace('chat:', '').split(':');
-            const studentId = parts.find(p => p !== TEACHER_ID);
-            if (!studentId) return;
-            
-            const name = studentId.replace('student_', '');
-            map[msg.channel] = {
-              id: studentId,
-              name: name || studentId,
-              channel: msg.channel,
-              lastMessage: msg.text || '',
-              lastTime: msg.created_at,
-              unread: 0,
-              initial: (name || studentId).charAt(0)
-            };
-          }
-        });
-
-        students = Object.values(map).reduce((acc, s) => { acc[s.id] = s; return acc; }, {});
-        
-        renderStudents();
-        
-        if (!activeStudentId && Object.keys(students).length > 0) {
-          const firstId = Object.values(students).sort((a,b) => new Date(b.lastTime) - new Date(a.lastTime))[0].id;
-          selectStudent(firstId);
-        }
-      } catch (e) {
-        console.error('Load students error:', e);
-        studentsList.innerHTML = `<div class="text-center py-12 text-gray-500">خطأ في التحميل</div>`;
-      }
-    }
-
-    function renderStudents(filter = '') {
-      const sorted = Object.values(students).sort((a, b) => new Date(b.lastTime) - new Date(a.lastTime));
-      const filtered = sorted.filter(s => 
-        !filter || s.name.includes(filter) || s.id.includes(filter)
-      );
-
-      if (filtered.length === 0) {
-        studentsList.innerHTML = `<div class="text-center py-12 px-4"><div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gray-100 flex items-center justify-center"><svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg></div><p class="text-sm text-gray-500">${filter ? 'لا نتائج' : 'لا يوجد طلاب بعد'}</p></div>`;
-        return;
-      }
-
-      studentsList.innerHTML = '';
-      filtered.forEach(s => {
-        const isActive = activeStudentId === s.id;
-        const item = document.createElement('button');
-        item.className = `w-full flex items-center gap-3 p-3 mx-2 rounded-2xl transition text-right ${isActive ? 'bg-violet-50' : 'hover:bg-gray-50'}`;
-        item.dataset.studentId = s.id;
-        
-        item.innerHTML = `
-          <div class="relative shrink-0">
-            <div class="w-[52px] h-[52px] rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-bold text-[18px] shadow-md">${escapeHTML(s.initial)}</div>
-          </div>
-          <div class="flex-1 min-w-0 text-right">
-            <div class="flex items-baseline justify-between gap-2 mb-1">
-              <h3 class="font-semibold text-[15px] text-gray-900 truncate">${escapeHTML(s.name)}</h3>
-              <span class="text-[11px] text-gray-500 shrink-0">${formatTime(s.lastTime)}</span>
-            </div>
-            <div class="flex items-center justify-between gap-2">
-              <p class="text-[13px] text-gray-500 truncate leading-snug flex-1">${escapeHTML(s.lastMessage || 'ابدأ المحادثة')}</p>
-              <span class="${s.unread > 0 ? '' : 'hidden'} bg-red-500 text-white text-[11px] min-w-[22px] h-[22px] px-1.5 rounded-full flex items-center justify-center font-bold shadow-sm shrink-0">${s.unread > 9 ? '9+' : s.unread}</span>
-            </div>
-          </div>
-        `;
-        
-        item.onclick = () => selectStudent(s.id);
-        studentsList.appendChild(item);
-      });
-    }
-
-    async function selectStudent(studentId) {
-      activeStudentId = studentId;
-      const s = students[studentId];
-      if (!s) return;
-
-      s.unread = 0;
-      renderStudents(searchInput.value);
-      updateNotifCount();
-
-      // Show chat
-      document.getElementById('sidebar').classList.add('hidden', 'lg:flex');
-      document.getElementById('chat-area').classList.remove('hidden');
-      document.getElementById('chat-area').classList.add('flex');
-      document.getElementById('empty-state').classList.add('hidden');
-      document.getElementById('chat-header').classList.remove('hidden');
-      document.getElementById('messages-container').classList.remove('hidden');
-      document.getElementById('input-wrap').classList.remove('hidden');
-
-      document.getElementById('chat-student-name').textContent = s.name;
-      document.getElementById('chat-student-id').textContent = `${s.id} • طالب نشط`;
-      document.getElementById('chat-avatar').textContent = s.initial;
-
-      await loadMessages(s.channel);
-      messageInput.focus();
-    }
-
-    async function loadMessages(channel) {
-      messagesList.innerHTML = `<div class="flex justify-center py-16"><div class="animate-spin w-7 h-7 border-2 border-violet-600 border-t-transparent rounded-full"></div></div>`;
-      
-      try {
-        const { data, error } = await supabase
-          .from('messages')
-          .select('*')
-          .eq('channel', channel)
-          .order('created_at', { ascending: true });
-
-        if (error) throw error;
-        renderMessages(data || []);
-      } catch (e) {
-        console.error('Load messages error:', e);
-        messagesList.innerHTML = `<div class="text-center py-12 text-red-500">فشل تحميل الرسائل</div>`;
-      }
-    }
-
-    function renderMessages(messages) {
-      messagesList.innerHTML = '';
-      let lastDate = null;
-
-      messages.forEach(msg => {
-        const date = new Date(msg.created_at);
-        const dateStr = date.toDateString();
-        
-        if (dateStr !== lastDate) {
-          lastDate = dateStr;
-          const sep = document.createElement('div');
-          sep.className = 'flex justify-center my-6';
-          sep.innerHTML = `<div class="bg-white px-4 py-1.5 rounded-full text-xs font-medium text-gray-600 shadow-sm border border-gray-100">${formatDateSep(date)}</div>`;
-          messagesList.appendChild(sep);
-        }
-        
-        appendMessageToDOM(msg, false);
-      });
-      
-      scrollToBottom();
-    }
-
-    function appendMessageToDOM(msg, animate = true) {
-      const isTeacher = msg.from_id === TEACHER_ID;
-      const wrap = document.createElement('div');
-      wrap.className = `flex ${isTeacher ? 'justify-end' : 'justify-start'} ${animate ? 'message-enter' : ''}`;
-      
-      wrap.innerHTML = `
-        <div class="max-w-[82%] sm:max-w-[72%] md:max-w-[65%]">
-          <div class="${isTeacher 
-            ? 'bg-gradient-to-br from-violet-600 to-purple-600 text-white rounded-[20px] rounded-bl-[6px] shadow-lg shadow-violet-500/15' 
-            : 'bg-white text-gray-900 rounded-[20px] rounded-br-[6px] shadow-sm border border-gray-100'} px-4 py-2.5">
-            <p class="text-[14.5px] leading-[1.6] whitespace-pre-wrap break-words">${escapeHTML(msg.text)}</p>
-          </div>
-          <div class="mt-1.5 ${isTeacher ? 'text-left' : 'text-right'} px-1">
-            <span class="text-[11px] text-gray-500">${formatTime(msg.created_at)}</span>
-          </div>
+      <form id="sendForm" class="p-4 border-t border-white/5 bg-[#0b1220]/60">
+        <div class="flex items-center gap-2 max-w-4xl mx-auto">
+          <input id="msgInput" class="flex-1 h-[48px] bg-[#050816] border border-white/10 rounded-2xl px-4 text-[15px] outline-none focus:border-violet-500/50 placeholder-gray-500" placeholder="اكتب رسالتك..." autocomplete="off">
+          <button class="h-[48px] px-6 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl font-bold shadow-lg shadow-violet-900/30 hover:opacity-90 active:scale-95 transition">إرسال</button>
         </div>
-      `;
-      
-      messagesList.appendChild(wrap);
-    }
+      </form>
+    </div>
+  </main>
+</div>
 
-    function scrollToBottom() {
-      const container = document.getElementById('messages-container');
-      container.scrollTop = container.scrollHeight;
-    }
+<script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const supa=createClient('https://igedjuwdwyoydiyhsfyb.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg');
+const TEACHER='teacher_abdulhamid';
+let currentChannel=null, currentStudent=null;
 
-    async function sendMessage() {
-      const text = messageInput.value.trim();
-      if (!text || !activeStudentId || isSending) return;
+// ساعة حية 100% مع الجهاز
+function updateClock(){ const now=new Date(); liveClock.textContent=now.toLocaleTimeString('ar-EG',{hour12:false}); }
+setInterval(updateClock,1000); updateClock();
 
-      const s = students[activeStudentId];
-      const channel = s.channel;
-      
-      isSending = true;
-      sendBtn.disabled = true;
-      messageInput.value = '';
-      autoResize();
-      
-      const tempMsg = {
-        from_id: TEACHER_ID,
-        text: text,
-        created_at: new Date().toISOString(),
-        channel: channel
-      };
-      
-      appendMessageToDOM(tempMsg, true);
-      scrollToBottom();
-      
-      s.lastMessage = text;
-      s.lastTime = tempMsg.created_at;
-      renderStudents(searchInput.value);
+const studentsEl=document.getElementById('students');
+const msgsEl=document.getElementById('msgs');
 
-      try {
-        const { error } = await supabase.from('messages').insert({
-          channel: channel,
-          from_id: TEACHER_ID,
-          text: text
-        });
-        
-        if (error) throw error;
-      } catch (e) {
-        console.error('Send error:', e);
-        alert('فشل إرسال الرسالة');
-      } finally {
-        isSending = false;
-        updateSendButton();
-      }
-    }
+function chFor(s){return `chat:${[TEACHER,s].sort().join(':')}`}
 
-    function handleNewMessage(payload) {
-      const msg = payload.new;
-      if (!msg.channel.includes(TEACHER_ID)) return;
+async function loadStudents(){
+  const {data}=await supa.from('messages').select('channel,from_id,text,created_at,status').ilike('channel',`%${TEACHER}%`).order('created_at',{ascending:false}).limit(300);
+  const map={}; data?.forEach(m=>{ const s=m.channel.split(':').find(p=>p.startsWith('student_')); if(s &&!map[s]) map[s]=m; });
+  studentsEl.innerHTML='';
+  for(const sid of Object.keys(map)){
+    const m=map[sid];
+    const {data:pres}=await supa.from('user_presence').select('*').eq('user_id',sid).maybeSingle();
+    const online=pres?.is_online && (Date.now()-new Date(pres.last_seen).getTime()<12000);
+    const name=sid.replace('student_','');
+    const el=document.createElement('div');
+    el.className='group p-3 rounded-xl hover:bg-white/5 cursor-pointer border border-transparent hover:border-violet-900/30 transition';
+    el.innerHTML=`<div class="flex items-center gap-3"><div class="relative"><div class="w-11 h-11 rounded-xl bg-[#1e293b] grid place-items-center font-bold text-violet-300 border border-white/5">${name.slice(0,2)}</div>${online?'<span class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#0b1220]"></span>':''}</div><div class="flex-1 min-w-0"><div class="flex justify-between items-baseline"><span class="font-semibold text-[14px] truncate">${name}</span><span class="text-[11px] text-gray-500">${new Date(m.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</span></div><div class="text-xs text-gray-400 truncate mt-0.5">${m.text||''}</div></div></div>`;
+    el.onclick=()=>openChat(sid);
+    studentsEl.appendChild(el);
+  }
+}
 
-      const parts = msg.channel.replace('chat:', '').split(':');
-      const studentId = parts.find(p => p !== TEACHER_ID);
-      if (!studentId) return;
+async function openChat(sid){
+  currentStudent=sid; currentChannel=chFor(sid);
+  document.getElementById('empty').classList.add('hidden');
+  document.getElementById('chatBox').classList.remove('hidden');
+  document.getElementById('sName').textContent=sid.replace('student_','');
+  document.getElementById('avatar').textContent=sid.replace('student_','').slice(0,2);
+  updatePresence(); loadMessages(); markRead();
+}
 
-      if (!students[studentId]) {
-        const name = studentId.replace('student_', '');
-        students[studentId] = {
-          id: studentId,
-          name: name || studentId,
-          channel: msg.channel,
-          lastMessage: msg.text,
-          lastTime: msg.created_at,
-          unread: 0,
-          initial: (name || studentId).charAt(0)
-        };
-      }
+async function updatePresence(){
+  const {data}=await supa.from('user_presence').select('*').eq('user_id',currentStudent).maybeSingle();
+  const on=data?.is_online && (Date.now()-new Date(data.last_seen).getTime()<12000);
+  sStatus.innerHTML=on?'<span class="w-2 h-2 bg-emerald-500 rounded-full"></span> متصل الآن':'<span class="w-2 h-2 bg-gray-600 rounded-full"></span> غير متصل';
+}
 
-      const s = students[studentId];
-      s.lastMessage = msg.text;
-      s.lastTime = msg.created_at;
+async function loadMessages(){
+  const {data}=await supa.from('messages').select('*').eq('channel',currentChannel).order('created_at');
+  msgsEl.innerHTML=''; data?.forEach(renderMsg); msgsEl.scrollTop=msgsEl.scrollHeight;
+}
 
-      if (msg.from_id === TEACHER_ID) {
-        renderStudents(searchInput.value);
-        return;
-      }
+function renderMsg(m){
+  const me=m.from_id===TEACHER;
+  const div=document.createElement('div'); div.className='flex '+(me?'justify-start':'justify-end');
+  let checks=''; if(me){ if(m.status==='read') checks='<span class="text-sky-400">✓✓</span>'; else if(m.status==='delivered') checks='<span class="text-gray-400">✓✓</span>'; else checks='<span class="text-gray-500">✓</span>'; }
+  div.innerHTML=`<div class="max-w-[72%] group relative"><div class="${me?'bg-gradient-to-r from-violet-600 to-indigo-600 text-white':'bg-[#1e293b] border border-white/5 text-gray-100'} px-4 py-2.5 rounded-2xl ${me?'rounded-br-md':'rounded-bl-md'} shadow-lg shadow-black/20"><div class="leading-[1.6] whitespace-pre-wrap break-words text-[14px]">${m.text||''}</div><div class="flex items-center gap-1.5 mt-1.5 justify-end"><span class="text-[10px] opacity-60">${new Date(m.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</span>${checks}</div></div><button onclick="delMsg('${m.id}')" class="absolute -top-2 -left-2 w-6 h-6 bg-red-600 rounded-full text-xs opacity-0 group-hover:opacity-100 transition grid place-items-center">×</button></div>`;
+  msgsEl.appendChild(div);
+}
 
-      if (activeStudentId === studentId) {
-        appendMessageToDOM(msg, true);
-        scrollToBottom();
-      } else {
-        s.unread = (s.unread || 0) + 1;
-      }
-      
-      renderStudents(searchInput.value);
-      updateNotifCount();
-    }
+async function markRead(){ await supa.from('messages').update({status:'read',read_at:new Date().toISOString()}).eq('channel',currentChannel).neq('from_id',TEACHER); }
 
-    function updateNotifCount() {
-      const total = Object.values(students).reduce((sum, s) => sum + (s.unread || 0), 0);
-      const badge = document.getElementById('notif-count');
-      if (total > 0) {
-        badge.textContent = total > 9 ? '9+' : total;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
+document.getElementById('sendForm').onsubmit=async e=>{ e.preventDefault(); const t=msgInput.value.trim(); if(!t||!currentChannel) return; msgInput.value=''; await supa.from('messages').insert({channel:currentChannel,from_id:TEACHER,text:t,status:'sent'}); };
 
-    function autoResize() {
-      messageInput.style.height = 'auto';
-      messageInput.style.height = Math.min(messageInput.scrollHeight, 128) + 'px';
-    }
+window.delMsg=async id=>{ if(confirm('حذف الرسالة نهائياً؟')){ await supa.from('messages').delete().eq('id',id); loadMessages(); } };
+clearChat.onclick=async()=>{ if(confirm('مسح كل المحادثة؟')){ await supa.from('messages').delete().eq('channel',currentChannel); msgsEl.innerHTML=''; } };
 
-    function updateSendButton() {
-      sendBtn.disabled = !messageInput.value.trim() || isSending;
-    }
+// Realtime
+supa.channel('rt').on('postgres_changes',{event:'*',schema:'public',table:'messages'},p=>{ if(p.new?.channel===currentChannel) loadMessages(); loadStudents(); }).on('postgres_changes',{event:'*',schema:'public',table:'user_presence'},()=>{ updatePresence(); loadStudents(); }).subscribe();
 
-    // Events
-    document.getElementById('message-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      sendMessage();
-    });
-
-    messageInput.addEventListener('input', () => {
-      autoResize();
-      updateSendButton();
-    });
-
-    messageInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    searchInput.addEventListener('input', (e) => renderStudents(e.target.value));
-
-    document.getElementById('back-btn').onclick = () => {
-      document.getElementById('chat-area').classList.add('hidden');
-      document.getElementById('chat-area').classList.remove('flex');
-      document.getElementById('sidebar').classList.remove('hidden');
-      activeStudentId = null;
-    };
-
-    // Init
-    (async () => {
-      await loadStudents();
-      
-      supabase.channel('teacher-messages')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, handleNewMessage)
-        .subscribe();
-    })();
-  </script>
+loadStudents(); setInterval(()=>{loadStudents(); if(currentStudent) updatePresence()},4000);
+</script>
 </body>
 </html>
