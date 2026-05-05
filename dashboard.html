@@ -1,223 +1,611 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة تحكم الأستاذ عبدالحميد</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{font-family:'Cairo',sans-serif}
-body{background:#020617;color:#e2e8f0}
-::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#4c1d95;border-radius:3px}
-.msg-enter{animation:slide.25s ease}@keyframes slide{from{opacity:0;transform:translateY(8px)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الأستاذ عبدالحميد - النسخة الاحترافية</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- خط Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+
+    <style>
+        /* ============================================ */
+        /* التصميم الأساسي */
+        /* ============================================ */
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --bg-main: #020617;
+            --bg-card: #0f172a;
+            --bg-hover: #1e293b;
+            --border-color: #1e293b;
+            --violet-primary: #7c3aed;
+            --violet-secondary: #8b5cf6;
+            --purple-accent: #9333ea;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* خلفية متحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15), transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: floatSlow 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -250px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.12), transparent 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: floatSlow 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.05); }
+        }
+
+        /* Scrollbar */
+       .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #4c1d95 transparent;
+        }
+
+       .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+       .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+       .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #4c1d95;
+            border-radius: 3px;
+        }
+
+       .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #6d28d9;
+        }
+
+        /* انيميشن الرسائل */
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+       .message-animate {
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        /* نبضة */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+       .animate-pulse-slow {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
-<body class="h-screen overflow-hidden">
-<!-- Header -->
-<header class="h-[70px] bg-[#0f172a]/95 backdrop-blur border-b border-slate-800 fixed top-0 inset-x-0 z-40">
-  <div class="h-full max-w-[1600px] mx-auto px-5 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-purple-600 grid place-items-center shadow-lg">
-        <span class="text-white font-black text-xl">ع</span>
-      </div>
-      <div>
-        <h1 class="font-bold text-[17px]">لوحة تحكم الأستاذ عبدالحميد</h1>
-        <div class="flex items-center gap-1.5 mt-0.5">
-          <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-          <span class="text-[11px] text-emerald-400">النظام يعمل</span>
+
+<body>
+    <!-- ============================================ -->
+    <!-- الهيدر -->
+    <!-- ============================================ -->
+    <header class="fixed top-0 left-0 right-0 h-[72px] bg-[#0f172a]/90 backdrop-blur-xl border-b border-[#1e293b] z-50">
+        <div class="h-full max-w-[1800px] mx-auto px-5 flex items-center justify-between">
+            <!-- الشعار -->
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/30">
+                    <span class="text-white font-black text-xl">ع</span>
+                </div>
+                <div>
+                    <h1 class="text-[18px] font-bold text-white leading-tight">لوحة تحكم الأستاذ عبدالحميد</h1>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse-slow"></span>
+                        <span class="text-[11px] text-emerald-400 font-medium">النظام يعمل</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الساعة -->
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex items-center gap-2 bg-[#020617] border border-violet-900/30 rounded-xl px-3.5 py-2">
+                    <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span id="liveClock" class="font-mono text-sm text-violet-200">--:--:--</span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div id="clock" class="font-mono text-violet-300 text-sm"></div>
-  </div>
-</header>
+    </header>
 
-<main class="pt-[70px] h-screen flex">
-  <!-- Sidebar -->
-  <aside class="w-[380px] bg-[#0f172a] border-l border-slate-800 flex flex-col h-[calc(100vh-70px)]">
-    <div class="p-4">
-      <input id="search" placeholder="ابحث عن طالب..." class="w-full h-11 bg-[#020617] border border-slate-800 rounded-xl px-4 outline-none focus:border-violet-600 transition">
-    </div>
-    <div id="students" class="flex-1 overflow-y-auto px-3 pb-3 space-y-1"></div>
-  </aside>
+    <!-- ============================================ -->
+    <!-- المحتوى الرئيسي -->
+    <!-- ============================================ -->
+    <main class="pt-[72px] h-screen flex max-w-[1800px] mx-auto relative z-10">
 
-  <!-- Chat -->
-  <section class="flex-1 flex flex-col bg-[#020617]">
-    <div id="empty" class="flex-1 grid place-items-center text-zinc-600">
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-violet-950/50 grid place-items-center">
-          <svg class="w-10 h-10 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-        </div>
-        <p>اختر محادثة من القائمة</p>
-      </div>
-    </div>
+        <!-- الشريط الجانبي -->
+        <aside class="w-full lg:w-[380px] xl:w-[400px] shrink-0 bg-[#0f172a] lg:border-l border-[#1e293b] flex flex-col h-[calc(100vh-72px)]">
+            <!-- البحث -->
+            <div class="p-4 border-b border-white/5">
+                <div class="relative">
+                    <input
+                        id="searchInput"
+                        type="text"
+                        placeholder="ابحث عن طالب..."
+                        class="w-full h-[46px] bg-[#020617] border border-white/10 rounded-2xl pr-11 pl-4 text-sm outline-none focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition"
+                    >
+                    <svg class="w-4 h-4 text-zinc-600 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <div class="flex items-center justify-between mt-3">
+                    <span class="text-xs text-zinc-500 font-semibold">المحادثات</span>
+                    <span id="studentCount" class="text-xs bg-violet-950/50 text-violet-300 px-2 py-0.5 rounded-full">0</span>
+                </div>
+            </div>
 
-    <div id="chatHead" class="hidden h-[64px] bg-[#0f172a] border-b border-slate-800 px-5 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div id="avatar" class="w-10 h-10 rounded-xl bg-violet-600 grid place-items-center font-bold"></div>
-        <div>
-          <div id="studentName" class="font-bold"></div>
-          <div id="studentStatus" class="text-xs text-zinc-500">متصل</div>
-        </div>
-      <button id="clearBtn" class="text-xs px-3 py-1.5 bg-red-950/50 hover:bg-red-900/70 text-red-300 rounded-lg border border-red-900/50 transition">مسح المحادثة</button>
-    </div>
+            <!-- قائمة الطلاب -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <div id="studentsList" class="p-2.5 space-y-1">
+                    <div class="text-center py-12 text-zinc-600">جاري التحميل...</div>
+                </div>
+            </div>
+        </aside>
 
-    <div id="msgsWrap" class="hidden flex-1 overflow-y-auto">
-      <div id="msgs" class="max-w-4xl mx-auto p-5 space-y-3"></div>
-    </div>
+        <!-- منطقة المحادثة -->
+        <section class="flex-1 flex flex-col bg-[#020617] h-[calc(100vh-72px)]">
+            <!-- حالة فارغة -->
+            <div id="emptyState" class="flex-1 flex items-center justify-center">
+                <div class="text-center">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-3xl bg-gradient-to-br from-violet-950/50 to-purple-950/50 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-violet-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">اختر محادثة</h3>
+                    <p class="text-zinc-500 text-sm">اختر طالب من القائمة لبدء المحادثة</p>
+                </div>
+            </div>
 
-    <div id="inputWrap" class="hidden p-4 bg-[#0f172a] border-t border-slate-800">
-      <form id="form" class="max-w-4xl mx-auto flex gap-2">
-        <textarea id="input" rows="1" placeholder="اكتب رسالتك... Enter للإرسال" class="flex-1 bg-[#020617] border border-slate-800 rounded-xl px-4 py-2.5 resize-none outline-none focus:border-violet-600 max-h-32"></textarea>
-        <button class="px-6 bg-violet-600 hover:bg-violet-500 disabled:opacity-40 rounded-xl font-bold transition" disabled>إرسال</button>
-      </form>
-    </div>
-  </section>
-</main>
+            <!-- هيدر المحادثة -->
+            <div id="chatHeader" class="hidden h-[68px] bg-[#0f172a] border-b border-[#1e293b] px-5 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <div id="headerAvatar" class="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center font-bold text-white"></div>
+                        <span id="onlineDot" class="absolute -bottom-1 -left-1 w-3.5 h-3.5 bg-zinc-600 border-2 border-[#0f172a] rounded-full"></span>
+                    </div>
+                    <div>
+                        <div id="headerName" class="font-bold text-[15px]"></div>
+                        <div id="headerStatus" class="text-xs text-zinc-500"></div>
+                    </div>
+                <button id="clearChatBtn" class="text-xs bg-red-950/40 hover:bg-red-900/60 text-red-300 px-3 py-1.5 rounded-lg border border-red-900/40 transition">مسح المحادثة</button>
+            </div>
 
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const supa = createClient('https://igedjuwdwyoydiyhsfyb.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg');
-const ME = 'teacher_abdulhamid';
-let active = null;
+            <!-- الرسائل -->
+            <div id="messagesContainer" class="hidden flex-1 overflow-y-auto custom-scrollbar">
+                <div id="messagesList" class="min-h-full p-5 max-w-4xl mx-auto"></div>
+            </div>
 
-// الساعة
-setInterval(()=> clock.textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),1000);
+            <!-- الإدخال -->
+            <div id="inputContainer" class="hidden bg-[#0f172a] border-t border-[#1e293b] p-4">
+                <form id="messageForm" class="max-w-4xl mx-auto flex items-end gap-3">
+                    <div class="flex-1">
+                        <textarea
+                            id="messageInput"
+                            rows="1"
+                            placeholder="اكتب رسالتك... (Enter للإرسال)"
+                            class="w-full min-h-[46px] max-h-[120px] bg-[#020617] border border-white/10 rounded-2xl px-4 py-3 text-[15px] resize-none outline-none focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20 transition"
+                        ></textarea>
+                    </div>
+                    <button
+                        id="sendButton"
+                        type="submit"
+                        disabled
+                        class="h-[46px] px-5 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:from-zinc-800 disabled:to-zinc-800 text-white rounded-2xl font-bold transition disabled:opacity-50"
+                    >
+                        إرسال
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
 
-// 1- HEARTBEAT للأونلاين
-setInterval(async ()=> {
-  await supa.from('user_presence').upsert({user_id:ME, is_online:true, last_seen:new Date().toISOString()});
-}, 4000);
+    <script type="module">
+        // ============================================
+        // الإعدادات
+        // ============================================
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// 2- تحميل الطلاب
-async function loadStudents(){
-  const {data} = await supa.from('messages').select('*').ilike('channel',`%${ME}%`).order('created_at',{ascending:false});
-  const map = new Map();
-  data?.forEach(m=>{
-    if(!map.has(m.channel)){
-      const sid = m.channel.split(':').find(x=>x.startsWith('student_'));
-      if(sid) map.set(sid, {id:sid, name:sid.replace('student_',''), last:m.text});
-    }
-  });
-  students.innerHTML = '';
-  [...map.values()].forEach(s=>{
-    const b = document.createElement('button');
-    b.className = 'w-full p-3 rounded-xl hover:bg-white/5 flex items-center gap-3 text-right transition';
-    b.innerHTML = `<div class="w-10 h-10 rounded-lg bg-violet-700 grid place-items-center text-sm font-bold">${s.name[0]}</div><div class="flex-1 min-w-0"><div class="truncate text-sm">${s.name}</div><div class="text-xs text-zinc-500 truncate">${s.last||''}</div></div>`;
-    b.onclick = ()=> openChat(s);
-    students.appendChild(b);
-  });
-}
+        const supabase = createClient(
+            'https://igedjuwdwyoydiyhsfyb.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg'
+        );
 
-// 3- فتح محادثة
-async function openChat(s){
-  active = s.id;
-  empty.classList.add('hidden');
-  chatHead.classList.remove('hidden');
-  msgsWrap.classList.remove('hidden');
-  inputWrap.classList.remove('hidden');
-  studentName.textContent = s.name;
-  avatar.textContent = s.name[0];
+        const TEACHER_ID = 'teacher_abdulhamid';
+        let currentStudent = null;
+        let studentsData = new Map();
 
-  const ch = `chat:${[ME,s.id].sort().join(':')}`;
-  const {data} = await supa.from('messages').select('*').eq('channel',ch).order('created_at');
-  msgs.innerHTML = '';
-  data?.forEach(m=> addMsg(m));
-  msgsWrap.scrollTop = msgsWrap.scrollHeight;
+        // العناصر
+        const elements = {
+            clock: document.getElementById('liveClock'),
+            search: document.getElementById('searchInput'),
+            studentsList: document.getElementById('studentsList'),
+            studentCount: document.getElementById('studentCount'),
+            emptyState: document.getElementById('emptyState'),
+            chatHeader: document.getElementById('chatHeader'),
+            messagesContainer: document.getElementById('messagesContainer'),
+            messagesList: document.getElementById('messagesList'),
+            inputContainer: document.getElementById('inputContainer'),
+            headerAvatar: document.getElementById('headerAvatar'),
+            headerName: document.getElementById('headerName'),
+            headerStatus: document.getElementById('headerStatus'),
+            onlineDot: document.getElementById('onlineDot'),
+            messageForm: document.getElementById('messageForm'),
+            messageInput: document.getElementById('messageInput'),
+            sendButton: document.getElementById('sendButton'),
+            clearChatBtn: document.getElementById('clearChatBtn')
+        };
 
-  // علم كمقروء
-  await supa.from('messages').update({status:'read'}).eq('channel',ch).neq('from_id',ME);
-}
+        // ============================================
+        // الساعة
+        // ============================================
+        function updateClock() {
+            const now = new Date();
+            elements.clock.textContent = now.toLocaleTimeString('en-US', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-// 4- إضافة رسالة مع hover delete
-function addMsg(m){
-  const me = m.from_id === ME;
-  const div = document.createElement('div');
-  div.className = 'msg-enter flex '+(me?'justify-end':'justify-start')+' group';
-  div.dataset.id = m.id;
-  const time = new Date(m.created_at).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
-  const tick = me? (m.status==='read'?'✓✓':m.status==='delivered'?'✓✓':'✓') : '';
-  div.innerHTML = `<div class="relative max-w-[70%]">
-    <div class="${me?'bg-violet-600':'bg-slate-800'} px-4 py-2 rounded-2xl text-[14px] leading-relaxed">${m.text}</div>
-    <div class="text-[11px] text-zinc-500 mt-1 ${me?'text-left':'text-right'}">${time} ${tick}</div>
-    <button onclick="delMsg('${m.id}')" class="absolute ${me?'-left-8':'-right-8'} top-1 w-6 h-6 grid place-items-center bg-red-900/80 rounded opacity-0 group-hover:opacity-100 transition text-red-300">×</button>
-  </div>`;
-  msgs.appendChild(div);
-}
-window.delMsg = async id => { if(confirm('حذف الرسالة؟')) await supa.from('messages').delete().eq('id',id); };
+        // ============================================
+        // HEARTBEAT - مهم للأونلاين
+        // ============================================
+        async function sendHeartbeat() {
+            await supabase.from('user_presence').upsert({
+                user_id: TEACHER_ID,
+                is_online: true,
+                last_seen: new Date().toISOString()
+            });
+        }
+        setInterval(sendHeartbeat, 4000);
+        sendHeartbeat();
 
-// 5- إرسال فوري (Optimistic UI)
-form.onsubmit = async e => {
-  e.preventDefault();
-  const txt = input.value.trim();
-  if(!txt ||!active) return;
+        // ============================================
+        // تحميل الطلاب
+        // ============================================
+        async function loadStudents() {
+            const { data } = await supabase
+               .from('messages')
+               .select('*')
+               .ilike('channel', `%${TEACHER_ID}%`)
+               .order('created_at', { ascending: false });
 
-  input.value = '';
-  input.style.height = 'auto';
-  form.querySelector('button').disabled = true;
+            const map = new Map();
+            data?.forEach(msg => {
+                if (!map.has(msg.channel)) {
+                    const studentId = msg.channel.split(':').find(id => id.startsWith('student_'));
+                    if (studentId) {
+                        map.set(studentId, {
+                            id: studentId,
+                            name: studentId.replace('student_', ''),
+                            lastMessage: msg.text,
+                            lastTime: msg.created_at
+                        });
+                    }
+                }
+            });
 
-  // ارسم فوراً
-  const temp = {id:'tmp', from_id:ME, text:txt, created_at:new Date().toISOString(), status:'sent'};
-  addMsg(temp);
-  msgsWrap.scrollTop = msgsWrap.scrollHeight;
+            studentsData = map;
+            renderStudents();
+        }
 
-  const ch = `chat:${[ME,active].sort().join(':')}`;
-  const {data} = await supa.from('messages').insert({channel:ch, from_id:ME, text:txt, status:'sent'}).select().single();
+        function renderStudents() {
+            const query = elements.search.value.toLowerCase();
+            const filtered = [...studentsData.values()].filter(s =>
+               !query || s.name.toLowerCase().includes(query)
+            );
 
-  document.querySelector('[data-id="tmp"]')?.remove();
-  if(data) addMsg(data);
+            elements.studentCount.textContent = filtered.length;
+            elements.studentsList.innerHTML = '';
 
-  form.querySelector('button').disabled = false;
-  input.focus();
-  loadStudents();
-};
+            filtered.forEach(student => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl hover:bg-white/5 flex items-center gap-3 text-right transition border border-transparent hover:border-white/5';
+                btn.innerHTML = `
+                    <div class="w-11 h-11 rounded-lg bg-gradient-to-br from-violet-600/80 to-purple-600/80 flex items-center justify-center font-bold text-sm shrink-0">
+                        ${student.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="flex-1 min-w-0 text-right">
+                        <div class="font-medium text-sm truncate">${student.name}</div>
+                        <div class="text-xs text-zinc-500 truncate mt-0.5">${student.lastMessage || ''}</div>
+                    </div>
+                    <div class="text-[10px] text-zinc-600 shrink-0">
+                        ${new Date(student.lastTime).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'})}
+                    </div>
+                `;
+                btn.onclick = () => openChat(student);
+                elements.studentsList.appendChild(btn);
+            });
+        }
 
-// Enter للإرسال
-input.addEventListener('input', ()=>{
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 128) + 'px';
-  form.querySelector('button').disabled =!input.value.trim();
-});
-input.addEventListener('keydown', e=>{
-  if(e.key==='Enter' &&!e.shiftKey){ e.preventDefault(); form.requestSubmit(); }
-});
+        // ============================================
+        // فتح محادثة
+        // ============================================
+        async function openChat(student) {
+            currentStudent = student;
 
-// مسح المحادثة
-clearBtn.onclick = async ()=>{
-  if(!active ||!confirm('مسح كل الرسائل؟')) return;
-  const ch = `chat:${[ME,active].sort().join(':')}`;
-  await supa.from('messages').delete().eq('channel',ch);
-  msgs.innerHTML = '';
-  loadStudents();
-};
+            // إظهار الواجهة
+            elements.emptyState.classList.add('hidden');
+            elements.chatHeader.classList.remove('hidden');
+            elements.messagesContainer.classList.remove('hidden');
+            elements.inputContainer.classList.remove('hidden');
 
-// Realtime
-supa.channel('teacher')
- .on('postgres_changes',{event:'INSERT',table:'messages'},p=>{
-    const m = p.new;
-    if(!m.channel.includes(ME)) return;
-    const sid = m.channel.split(':').find(x=>x.startsWith('student_'));
-    if(sid===active && m.from_id!==ME){
-      addMsg(m);
-      msgsWrap.scrollTop = msgsWrap.scrollHeight;
-      supa.from('messages').update({status:'delivered'}).eq('id',m.id);
-    }
-    loadStudents();
-  })
- .on('postgres_changes',{event:'UPDATE',table:'messages'},p=>{
-    const el = document.querySelector(`[data-id="${p.new.id}"]`);
-    if(el){ el.remove(); addMsg(p.new); }
-  })
- .on('postgres_changes',{event:'DELETE',table:'messages'},p=>{
-    document.querySelector(`[data-id="${p.old.id}"]`)?.remove();
-  })
- .subscribe();
+            // تحديث الهيدر
+            elements.headerName.textContent = student.name;
+            elements.headerAvatar.textContent = student.name.charAt(0).toUpperCase();
+            elements.headerStatus.textContent = 'متصل';
 
-loadStudents();
-const students=document.getElementById('students'), msgs=document.getElementById('msgs'), msgsWrap=document.getElementById('msgsWrap'), input=document.getElementById('input'), form=document.getElementById('form'), empty=document.getElementById('empty'), chatHead=document.getElementById('chatHead'), inputWrap=document.getElementById('inputWrap'), avatar=document.getElementById('avatar'), studentName=document.getElementById('studentName'), clearBtn=document.getElementById('clearBtn'), clock=document.getElementById('clock'), search=document.getElementById('search');
-search.oninput = ()=> loadStudents();
-</script>
+            // تحميل الرسائل
+            const channel = `chat:${[TEACHER_ID, student.id].sort().join(':')}`;
+            const { data } = await supabase
+               .from('messages')
+               .select('*')
+               .eq('channel', channel)
+               .order('created_at', { ascending: true });
+
+            elements.messagesList.innerHTML = '';
+            data?.forEach(msg => appendMessage(msg, false));
+
+            // علم كمقروء
+            await supabase
+               .from('messages')
+               .update({ status: 'read' })
+               .eq('channel', channel)
+               .neq('from_id', TEACHER_ID);
+
+            elements.messageInput.focus();
+        }
+
+        // ============================================
+        // إضافة رسالة - مع hover delete
+        // ============================================
+        function appendMessage(message, animate = true) {
+            const isMe = message.from_id === TEACHER_ID;
+            const div = document.createElement('div');
+            div.className = `message-animate flex ${isMe? 'justify-end' : 'justify-start'} mb-3 group`;
+            div.dataset.messageId = message.id;
+
+            const time = new Date(message.created_at).toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            let ticks = '';
+            if (isMe) {
+                if (message.status === 'read') {
+                    ticks = '<span class="text-sky-400">✓✓</span>';
+                } else if (message.status === 'delivered') {
+                    ticks = '<span class="text-zinc-500">✓✓</span>';
+                } else {
+                    ticks = '<span class="text-zinc-600">✓</span>';
+                }
+            }
+
+            div.innerHTML = `
+                <div class="relative max-w-[75%]">
+                    <div class="${isMe
+                       ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white'
+                        : 'bg-[#1e293b] border border-white/5'
+                    } px-4 py-2.5 rounded-2xl ${isMe? 'rounded-bl-md' : 'rounded-br-md'} shadow-md">
+                        <p class="text-[14px] leading-relaxed whitespace-pre-wrap">${escapeHtml(message.text)}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 mt-1 px-1 ${isMe? 'justify-end' : 'justify-start'}">
+                        <span class="text-[11px] text-zinc-500">${time}</span>
+                        ${ticks? `<span class="text-xs">${ticks}</span>` : ''}
+                    </div>
+                    <!-- زر الحذف يظهر على hover -->
+                    <button
+                        onclick="deleteMessage('${message.id}')"
+                        class="absolute ${isMe? '-left-8' : '-right-8'} top-2 w-7 h-7 bg-red-900/80 hover:bg-red-800 rounded-lg grid place-items-center opacity-0 group-hover:opacity-100 transition-all"
+                        title="حذف الرسالة"
+                    >
+                        <svg class="w-3.5 h-3.5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            elements.messagesList.appendChild(div);
+            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+        }
+
+        // حذف رسالة
+        window.deleteMessage = async (id) => {
+            if (!confirm('حذف هذه الرسالة؟')) return;
+            await supabase.from('messages').delete().eq('id', id);
+        };
+
+        // ============================================
+        // إرسال رسالة - فوري
+        // ============================================
+        elements.messageForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const text = elements.messageInput.value.trim();
+            if (!text ||!currentStudent) return;
+
+            // مسح الحقل فوراً
+            elements.messageInput.value = '';
+            elements.messageInput.style.height = 'auto';
+            elements.sendButton.disabled = true;
+
+            // ارسم الرسالة فوراً (Optimistic UI)
+            const tempMessage = {
+                id: 'temp_' + Date.now(),
+                from_id: TEACHER_ID,
+                text: text,
+                created_at: new Date().toISOString(),
+                status: 'sent'
+            };
+            appendMessage(tempMessage, true);
+
+            // أرسل للسيرفر
+            const channel = `chat:${[TEACHER_ID, currentStudent.id].sort().join(':')}`;
+            try {
+                const { data } = await supabase
+                   .from('messages')
+                   .insert({
+                        channel: channel,
+                        from_id: TEACHER_ID,
+                        text: text,
+                        status: 'sent'
+                    })
+                   .select()
+                   .single();
+
+                // احذف المؤقتة وضع الحقيقية
+                document.querySelector(`[data-message-id="${tempMessage.id}"]`)?.remove();
+                if (data) {
+                    appendMessage(data, true);
+                }
+
+                // حدث قائمة الطلاب
+                loadStudents();
+
+            } catch (error) {
+                console.error('Send error:', error);
+                alert('فشل الإرسال');
+            }
+
+            elements.sendButton.disabled = false;
+            elements.messageInput.focus();
+        };
+
+        // Enter للإرسال
+        elements.messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' &&!e.shiftKey) {
+                e.preventDefault();
+                elements.messageForm.requestSubmit();
+            }
+        });
+
+        elements.messageInput.addEventListener('input', () => {
+            elements.messageInput.style.height = 'auto';
+            elements.messageInput.style.height = Math.min(elements.messageInput.scrollHeight, 120) + 'px';
+            elements.sendButton.disabled =!elements.messageInput.value.trim();
+        });
+
+        // ============================================
+        // مسح المحادثة
+        // ============================================
+        elements.clearChatBtn.onclick = async () => {
+            if (!currentStudent ||!confirm('مسح المحادثة بالكامل؟')) return;
+
+            const channel = `chat:${[TEACHER_ID, currentStudent.id].sort().join(':')}`;
+            await supabase.from('messages').delete().eq('channel', channel);
+            elements.messagesList.innerHTML = '';
+            loadStudents();
+        };
+
+        // ============================================
+        // Realtime
+        // ============================================
+        supabase
+           .channel('teacher-dashboard')
+           .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+                const msg = payload.new;
+                if (!msg.channel.includes(TEACHER_ID)) return;
+
+                const studentId = msg.channel.split(':').find(id => id.startsWith('student_'));
+
+                // إذا كانت المحادثة مفتوحة
+                if (studentId === currentStudent?.id && msg.from_id!== TEACHER_ID) {
+                    appendMessage(msg, true);
+                    // علم كمستلم
+                    supabase.from('messages').update({ status: 'delivered' }).eq('id', msg.id);
+                }
+
+                loadStudents();
+            })
+           .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'messages' }, (payload) => {
+                const msg = payload.new;
+                const el = document.querySelector(`[data-message-id="${msg.id}"]`);
+                if (el) {
+                    el.remove();
+                    appendMessage(msg, false);
+                }
+            })
+           .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'messages' }, (payload) => {
+                document.querySelector(`[data-message-id="${payload.old.id}"]`)?.remove();
+            })
+           .subscribe();
+
+        // ============================================
+        // مساعدات
+        // ============================================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        elements.search.addEventListener('input', renderStudents);
+
+        // بدء
+        loadStudents();
+    </script>
 </body>
 </html>
