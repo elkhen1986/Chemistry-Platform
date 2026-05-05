@@ -180,7 +180,7 @@ main { flex:1; padding:20px; max-width:980px; margin:0 auto; width:100%; positio
         <h3>مرحباً بك في الدردشة المباشرة</h3>
         <p>اسأل المعلم عن أي شيء في الكيمياء وسيرد عليك مباشرة</p>
       </div>
-      <div class="typing" id="typing"><span></span><span></span><span></span></div>
+      <div class="typing" id="typing"><span></span><span></span></div>
     </div>
 
     <div class="chat-input-wrap">
@@ -276,16 +276,6 @@ async function loadHistory(){
   loadLocal();
 }
 
-if(useSupabase && supabase){
-  try{
-    supabase.channel('public:messages:'+channelName)
-      .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:`channel=eq.${channelName}`}, payload=>{
-        const m = payload.new;
-        if(m.from_id !== userId) addMessage(m.text, m.from_id, m.created_at, {save:false});
-      }).subscribe();
-  }catch{}
-}
-
 async function sendMessage(){
   const text = msgInput.value.trim();
   if(!text) return;
@@ -317,25 +307,72 @@ loadHistory();
 if(!localStorage.getItem(storageKey)){
   setTimeout(()=> addMessage(`أهلاً ${studentName} 👋 أنا أ. عبدالحميد. اسألني أي شيء عن الكيمياء وأنا معك خطوة بخطوة.`, teacherId, new Date().toISOString(), {save:false}), 600);
 }
-})();
 
-// حضور أونلاين
-setInterval(async ()=>{
-  await supa.from('user_presence').upsert({user_id:userId, last_seen:new Date(), is_online:true})
-},4000);
+// === إشعار للأب (الصفحة الأم) ===
+function notifyParentNewMessage(){
+  try{
+    if(window.parent !== window){
+      window.parent.postMessage({type:'new-message', from: 'teacher'}, '*');
+    }
+  }catch(e){}
+}
 
-// لما توصلك رسالة من المعلم → علّمها delivered
-supa.channel('deliver').on('postgres_changes',{event:'INSERT',table:'messages'},async p=>{
-  if(p.new.channel.includes(userId) && p.new.from_id!==userId){
-    await supa.from('messages').update({status:'delivered',delivered_at:new Date()}).eq('id',p.new.id)
-  }
-}).subscribe()
+// === حضور أونلاين وتحديث الحالة ===
+if(useSupabase && supabase){
+  // حدث حالة الاتصال كل 4 ثواني
+  setInterval(async ()=>{
+    try{
+      await supabase.from('user_presence').upsert({
+        user_id: userId, 
+        last_seen: new Date().toISOString(), 
+        is_online: true
+      });
+    }catch(e){}
+  }, 4000);
+
+  // لما توصلك رسالة من المعلم
+  supabase.channel('public:messages:'+channelName)
+    .on('postgres_changes',{
+      event:'INSERT',
+      schema:'public',
+      table:'messages',
+      filter:`channel=eq.${channelName}`
+    }, async (payload)=>{
+      const m = payload.new;
+      if(m.from_id !== userId){
+        addMessage(m.text, m.from_id, m.created_at, {save:false});
+        
+        // === هنا الإشعار ===
+        notifyParentNewMessage();
+        
+        // علّم الرسالة delivered
+        try{
+          await supabase.from('messages')
+            .update({status:'delivered', delivered_at: new Date().toISOString()})
+            .eq('id', m.id);
+        }catch(e){}
+      }
+    }).subscribe();
+}
 
 // لما تفتح الشات → علّم الكل مقروء
 async function markAllRead(){
-  await supa.from('messages').update({status:'read',read_at:new Date()}).eq('channel',channel).neq('from_id',userId)
+  if(!useSupabase) return;
+  try{
+    await supabase.from('messages')
+      .update({status:'read', read_at: new Date().toISOString()})
+      .eq('channel', channelName)
+      .neq('from_id', userId);
+  }catch(e){}
 }
-const channelName = `chat:${[userId, 'teacher_abdulhamid'].sort().join(':')}`;
+
+// نادِ markAllRead لما الصفحة تفتح
+markAllRead();
+
+// وكل ما المستخدم يكتب، علّم مقروء
+msgInput.addEventListener('focus', markAllRead);
+
+})();
 </script>
 </body>
 </html>
