@@ -199,7 +199,7 @@ main { flex:1; padding:20px; max-width:980px; margin:0 auto; width:100%; positio
 const SUPABASE_URL = 'https://igedjuwdwyoydiyhsfyb.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZWRqdXdkd3lveWRpeWhzZnliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4NTM0OTIsImV4cCI6MjA5MzQyOTQ5Mn0.8otVjvVT5NWx6whBvA_15ke48p6N9fUWMQE7MTnCrYg';
 let supabase = null;
-try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); console.log('✅ Supabase initialized'); } catch(e){ console.error('❌ Supabase error:', e); }
 
 const chatBox = document.getElementById('chat');
 const msgInput = document.getElementById('msgInput');
@@ -218,12 +218,15 @@ const teacherId = 'teacher_abdulhamid';
 const channelName = `chat:${[userId, teacherId].sort().join(':')}`;
 const storageKey = `chem11_chat_${channelName}`;
 
+console.log('👤 User:', userId, 'Channel:', channelName);
+
 let useSupabase = false;
 if(supabase){
   try{
     const { error } = await supabase.from('messages').select('id').limit(1);
     useSupabase = !error;
-  }catch(e){ useSupabase = false; }
+    console.log('📡 Supabase mode:', useSupabase ? 'ONLINE' : 'OFFLINE');
+  }catch(e){ useSupabase = false; console.warn('Supabase check failed'); }
 }
 modeBadge.textContent = useSupabase ? 'متصل مباشر' : 'وضع تجريبي';
 modeBadge.style.background = useSupabase ? 'rgba(34,197,94,.15)' : 'rgba(139,92,246,.15)';
@@ -269,9 +272,10 @@ async function loadHistory(){
       if(data && data.length){
         chatBox.querySelectorAll('.msg-wrap').forEach(n=>n.remove());
         data.forEach(m=> addMessage(m.text, m.from_id, m.created_at, {save:false}));
+        console.log('📚 Loaded', data.length, 'messages from Supabase');
         return;
       }
-    }catch{}
+    }catch(e){ console.error('Load history error:', e); }
   }
   loadLocal();
 }
@@ -284,7 +288,10 @@ async function sendMessage(){
   msgInput.value=''; msgInput.style.height='auto'; sendBtn.disabled=true;
   
   if(useSupabase){
-    try{ await supabase.from('messages').insert({channel:channelName, from_id:userId, text}); }catch{}
+    try{ 
+      await supabase.from('messages').insert({channel:channelName, from_id:userId, text}); 
+      console.log('📤 Message sent to Supabase');
+    }catch(e){ console.error('Send error:', e); }
   }
 }
 
@@ -313,13 +320,16 @@ function notifyParentNewMessage(){
   try{
     if(window.parent !== window){
       window.parent.postMessage({type:'new-message', from: 'teacher'}, '*');
+      console.log('✅ تم إرسال إشعار للأب (parent)');
+    } else {
+      console.log('⚠️ الصفحة مفتوحة مباشرة - لا يوجد parent');
     }
-  }catch(e){}
+  }catch(e){ console.error('❌ خطأ في إرسال الإشعار:', e); }
 }
 
 // === حضور أونلاين وتحديث الحالة ===
 if(useSupabase && supabase){
-  // حدث حالة الاتصال كل 4 ثواني
+  // حدث حالة الاتصال
   setInterval(async ()=>{
     try{
       await supabase.from('user_presence').upsert({
@@ -330,8 +340,10 @@ if(useSupabase && supabase){
     }catch(e){}
   }, 4000);
 
-  // لما توصلك رسالة من المعلم
-  supabase.channel('public:messages:'+channelName)
+  // الاشتراك في Realtime - تم تغيير اسم القناة
+  console.log('🔌 Connecting to Realtime channel:', 'realtime:'+channelName);
+  
+  supabase.channel('realtime:'+channelName)
     .on('postgres_changes',{
       event:'INSERT',
       schema:'public',
@@ -339,23 +351,31 @@ if(useSupabase && supabase){
       filter:`channel=eq.${channelName}`
     }, async (payload)=>{
       const m = payload.new;
+      console.log('📨 New message received:', m);
+      
       if(m.from_id !== userId){
         addMessage(m.text, m.from_id, m.created_at, {save:false});
         
-        // === هنا الإشعار ===
+        // === هنا الإشعار - مهم جداً ===
+        console.log('🔔 Calling notifyParentNewMessage()');
         notifyParentNewMessage();
         
-        // علّم الرسالة delivered
         try{
           await supabase.from('messages')
             .update({status:'delivered', delivered_at: new Date().toISOString()})
             .eq('id', m.id);
         }catch(e){}
       }
-    }).subscribe();
+    }).subscribe((status) => {
+      console.log('📡 Realtime status:', status);
+      if(status === 'SUBSCRIBED') {
+        console.log('✅ Realtime connected successfully!');
+        modeBadge.textContent = 'متصل مباشر ✓';
+      }
+    });
 }
 
-// لما تفتح الشات → علّم الكل مقروء
+// علم الكل مقروء
 async function markAllRead(){
   if(!useSupabase) return;
   try{
@@ -363,13 +383,10 @@ async function markAllRead(){
       .update({status:'read', read_at: new Date().toISOString()})
       .eq('channel', channelName)
       .neq('from_id', userId);
+    console.log('✓ Messages marked as read');
   }catch(e){}
 }
-
-// نادِ markAllRead لما الصفحة تفتح
 markAllRead();
-
-// وكل ما المستخدم يكتب، علّم مقروء
 msgInput.addEventListener('focus', markAllRead);
 
 })();
