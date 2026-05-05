@@ -130,20 +130,42 @@
 </style>
 
 <script>
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   const btn = document.getElementById('chatFloatBtn');
   const popup = document.getElementById('chatPopup');
   const close = document.getElementById('closeChat');
   const frame = document.getElementById('chatFrame');
+  
+  if(!btn){ console.error('❌ زر الدردشة مش موجود'); return; }
+  
   let loaded = false;
 
-  btn.onclick = () => {
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    console.log('✅ دوس على زر الدردشة');
+    
     popup.classList.toggle('show');
+    
     if(!loaded){
-      frame.src = 'chat.html'; // الملف في نفس المجلد
+      // جرب المسارات دي بالترتيب
+      const paths = ['chat.html', './chat.html', '/chat.html', 'components/chat.html'];
+      
+      // استخدم أول مسار
+      frame.src = 'chat.html';
+      console.log('📂 بحاول أفتح:', frame.src);
+      
+      frame.onload = () => console.log('✅ الدردشة فتحت');
+      frame.onerror = () => {
+        console.error('❌ فشل تحميل chat.html');
+        alert('ملف chat.html مش موجود في نفس المجلد!\nتأكد إن الملف موجود جنب index.html');
+      };
+      
       loaded = true;
     }
-  };
-  close.onclick = () => popup.classList.remove('show');
-})();
+  });
+  
+  close.addEventListener('click', () => {
+    popup.classList.remove('show');
+  });
+});
 </script>
