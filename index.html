@@ -51,29 +51,29 @@
     
     const html = `
       <style>
-        .elkhen-tip{position:fixed;z-index:100001;background:#0f172a;color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;font-family:'Cairo',sans-serif;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s;transform:translateY(5px);box-shadow:0 4px 12px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)}
+        .elkhen-tip{position:fixed;z-index:100001;background:#0f172a;color:#fff;padding:5px 9px;border-radius:7px;font-size:11px;font-family:'Cairo',sans-serif;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s;transform:translateY(5px);box-shadow:0 4px 12px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1)}
         .elkhen-tip.show{opacity:1;transform:translateY(0)}
-        .elkhen-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;min-width:20px;height:20px;border-radius:10px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid #0a0f1c;transform:scale(0);transition:.2s;z-index:2}
+        .elkhen-badge{position:absolute;top:-3px;right:-3px;background:#ef4444;color:#fff;min-width:16px;height:16px;border-radius:8px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid #0a0f1c;transform:scale(0);transition:.2s;z-index:2}
         .elkhen-badge.show{transform:scale(1)}
         .elkhen-pulse{animation:elkhenPulse 1.5s infinite}
-        @keyframes elkhenPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}70%{box-shadow:0 0 0 10px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
-        @media(max-width:600px){#waBtn{left:12px!important;bottom:65px!important}#chatBtn{left:76px!important;bottom:65px!important}#chatPopupElkhen{left:10px!important;right:10px!important;width:auto!important;bottom:130px!important;height:420px!important}}
+        @keyframes elkhenPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+        @media(max-width:600px){#waBtn{left:10px!important;bottom:60px!important}#chatBtn{left:60px!important;bottom:60px!important}#chatPopupElkhen{left:10px!important;right:10px!important;width:auto!important;bottom:115px!important;height:400px!important}}
       </style>
-      <a href="https://wa.me/96555959295" target="_blank" id="waBtn" data-tip="تواصل واتساب" style="position:fixed;bottom:75px;left:20px;z-index:99999;text-decoration:none">
-        <div style="width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,.4);cursor:pointer;transition:.2s">
-          <i class="fab fa-whatsapp" style="color:#fff;font-size:28px"></i>
+      <a href="https://wa.me/96555959295" target="_blank" id="waBtn" data-tip="تواصل واتساب" style="position:fixed;bottom:70px;left:18px;z-index:99999;text-decoration:none">
+        <div style="width:42px;height:42px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(37,211,102,.35);cursor:pointer;transition:.2s">
+          <i class="fab fa-whatsapp" style="color:#fff;font-size:21px"></i>
         </div>
       </a>
-      <button id="chatBtn" data-tip="دردشة مباشرة" style="position:fixed;bottom:75px;left:88px;z-index:99999;background:none;border:none;padding:0;cursor:pointer">
-        <div style="width:56px;height:56px;background:linear-gradient(135deg,#8b5cf6,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(139,92,246,.4);transition:.2s;position:relative">
-          <i class="fas fa-comments" style="color:#fff;font-size:22px"></i>
+      <button id="chatBtn" data-tip="دردشة مباشرة" style="position:fixed;bottom:70px;left:66px;z-index:99999;background:none;border:none;padding:0;cursor:pointer">
+        <div style="width:42px;height:42px;background:linear-gradient(135deg,#8b5cf6,#ec4899);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(139,92,246,.35);transition:.2s;position:relative">
+          <i class="fas fa-comments" style="color:#fff;font-size:18px"></i>
           <span id="chatBadge" class="elkhen-badge">0</span>
         </div>
       </button>
-      <div id="chatPopupElkhen" style="position:fixed;bottom:145px;left:20px;width:370px;max-width:calc(100vw - 40px);height:460px;max-height:calc(100vh - 180px);background:#0a0f1c;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.7);z-index:100000;display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(139,92,246,.3)">
-        <div style="height:48px;background:linear-gradient(90deg,#7c3aed,#8b5cf6);display:flex;align-items:center;justify-content:space-between;padding:0 15px;color:#fff;font-family:'Cairo',sans-serif;font-weight:700">
+      <div id="chatPopupElkhen" style="position:fixed;bottom:125px;left:18px;width:360px;max-width:calc(100vw - 36px);height:440px;max-height:calc(100vh - 170px);background:#0a0f1c;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.7);z-index:100000;display:none;flex-direction:column;overflow:hidden;border:1px solid rgba(139,92,246,.3)">
+        <div style="height:44px;background:linear-gradient(90deg,#7c3aed,#8b5cf6);display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#fff;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px">
           <span>💬 دردشة مباشرة</span>
-          <button id="closeChatElkhen" style="background:rgba(0,0,0,.2);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:20px;line-height:1">×</button>
+          <button id="closeChatElkhen" style="background:rgba(0,0,0,.2);border:none;color:#fff;width:26px;height:26px;border-radius:7px;cursor:pointer;font-size:18px;line-height:1">×</button>
         </div>
         <iframe id="chatIframeElkhen" style="flex:1;border:0;width:100%;background:#020617" src="about:blank"></iframe>
       </div>
@@ -95,7 +95,6 @@
     let unread = parseInt(localStorage.getItem('elkhen_unread') || '0');
     let audioUnlocked = false;
     
-    // فتح الصوت بعد أول تفاعل (مهم للمتصفحات)
     const unlockAudio = () => {
       if(!audioUnlocked){
         sound.volume = 0.6;
@@ -138,7 +137,7 @@
       const rect = el.getBoundingClientRect();
       tip.textContent = text;
       tip.style.left = Math.max(10, (rect.left + rect.width/2 - tip.offsetWidth/2)) + 'px';
-      tip.style.top = (rect.top - 38) + 'px';
+      tip.style.top = (rect.top - 36) + 'px';
       tip.classList.add('show');
     }
     function hideTip(){ tip.classList.remove('show'); }
