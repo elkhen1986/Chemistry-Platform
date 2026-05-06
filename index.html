@@ -8,6 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+  /* شيل أي مسافة بين الهيدر والمحتوى */
+  #header { margin:0 !important; padding:0 !important; }
+  main#app { 
+    margin-top: 0 !important; 
+    padding-top: 16px !important; /* خليها 0 لو عايزها لازقة */
+  }
+  
+  /* الـ particles ساعات بيعمل height وهمي */
+  .particles {
+    position: fixed !important;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .particle { position: absolute; } /* لو كانوا block */
+</style>
 </head>
 <body>
 
